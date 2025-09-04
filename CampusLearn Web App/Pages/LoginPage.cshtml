@@ -1,0 +1,25 @@
+﻿@page
+@model CampusLearn_Web_App.Pages.LoginPageModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<link rel="stylesheet" href="~/css/auth.css" />
+
+<h2>Login</h2>
+
+<form method="post">
+    <div>
+        <label>Email</label>
+        <input asp-for="Email" />
+    </div>
+    <div>
+        <label>Password</label>
+        <input asp-for="Password" type="password" />
+    </div>
+    <button type="submit">Login</button>
+</form>
+
+<p>
+    Don’t have an account? <a asp-page="/RegisterPage">Register here</a>
+</p>
