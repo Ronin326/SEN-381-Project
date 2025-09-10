@@ -1,25 +1,29 @@
 ﻿@page
 @model CampusLearn_Web_App.Pages.LoginPageModel
 @{
+    Layout = null;
     ViewData["Title"] = "Login";
 }
 
-<link rel="stylesheet" href="~/css/auth.css" />
+<link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
 
-<h2>Login</h2>
 
-<form method="post">
-    <div>
-        <label>Email</label>
-        <input asp-for="Email" />
+<form class="form">
+    <p class="form-title">Sign in to your account</p>
+    <div class="input-container">
+        <input type="email" placeholder="Enter email">
+        <span>
+        </span>
     </div>
-    <div>
-        <label>Password</label>
-        <input asp-for="Password" type="password" />
+    <div class="input-container">
+        <input type="password" placeholder="Enter password">
     </div>
-    <button type="submit">Login</button>
+    <button type="submit" class="submit">
+        Sign in
+    </button>
+
+    <p class="signup-link">
+        No account? 
+        <a asp-page="/RegisterPage">Register here</a>
+    </p>
 </form>
-
-<p>
-    Don’t have an account? <a asp-page="/RegisterPage">Register here</a>
-</p>

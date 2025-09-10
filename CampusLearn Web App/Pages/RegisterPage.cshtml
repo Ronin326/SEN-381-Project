@@ -1,45 +1,26 @@
 ﻿@page
 @model CampusLearn_Web_App.Pages.RegisterPageModel
 @{
+    Layout = null;
     ViewData["Title"] = "Register";
 }
 
-<link rel="stylesheet" href="~/css/auth.css" />
+<link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
 
-<h2>Register</h2>
-
-<form method="post">
-    <div>
-        <label>Full Name</label>
-        <input asp-for="FullName" />
-        <span asp-validation-for="FullName" class="text-danger"></span>
-    </div>
-    <div>
-        <label>Email</label>
-        <input asp-for="Email" type="email" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-    <div>
-        <label>Phone</label>
-        <input asp-for="Phone" type="tel" />
-        <span asp-validation-for="Phone" class="text-danger"></span>
-    </div>
-    <div>
-        <label>Password</label>
-        <input asp-for="Password" type="password" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-    <div>
-        <label>Confirm Password</label>
-        <input asp-for="ConfirmPassword" type="password" />
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-    </div>
-    <button type="submit">Register</button>
-</form>
-
-<p>
-    Already have an account? <a asp-page="/LoginPage">Login here</a>
-</p>
+<div class="form-box">
+    <form class="form">
+        <p class="form-title">Register your account</p>
+        <div class="input-container">
+            <input type="text" class="input" placeholder="Full Name">
+            <input type="email" class="input" placeholder="Email">
+            <input type="password" class="input" placeholder="Password">
+        </div>
+        <button type="submit" class="submit">Sign up</button>
+        <div class="signup-link">
+            <p>Have an account? <a asp-page="/LoginPage">Login here</a></p>
+        </div>
+    </form>
+</div>
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
