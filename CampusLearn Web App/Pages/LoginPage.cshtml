@@ -8,18 +8,32 @@
 <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
 <script src="~/scripts/LoginAndRegisterValidation.js" asp-append-version="true"></script>
 
-
-<form class="form">
+<form class="form" method="post">
     <p class="form-title">Sign in to your account</p>
+    
+    @if (!string.IsNullOrEmpty(Model?.ErrorMessage))
+    {
+        <div class="error-message" style="color: red; margin-bottom: 15px; text-align: center; padding: 10px; background: #ffe6e6; border-radius: 5px;">
+            @Model.ErrorMessage
+        </div>
+    }
+
+    @if (ViewData["SuccessMessage"] != null)
+    {
+        <div class="success-message" style="color: green; margin-bottom: 15px; text-align: center; padding: 10px; background: #e6ffe6; border-radius: 5px;">
+            @ViewData["SuccessMessage"]
+        </div>
+    }
+    
     <div class="input-container">
-        <input type="email" id="email" required placeholder="Enter email">
-        <span>
-        </span>
+        <input asp-for="Email" type="email" required placeholder="Email (@@belgiumcampus.ac.za)">
+        <span asp-validation-for="Email" class="text-danger"></span>
     </div>
     <div class="input-container">
-        <input type="password" required placeholder="Enter password">
+        <input asp-for="Password" type="password" required placeholder="Password">
+        <span asp-validation-for="Password" class="text-danger"></span>
     </div>
-    <button type="submit" class="submit" onclick="ValidForm()">
+    <button type="submit" class="submit">
         Sign in
     </button>
 
@@ -28,3 +42,7 @@
         <a asp-page="/RegisterPage">Register here</a>
     </p>
 </form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

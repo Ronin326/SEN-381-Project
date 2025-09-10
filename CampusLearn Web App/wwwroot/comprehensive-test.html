@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusLearn - Comprehensive Test Suite</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .test-form {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #495057;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-warning { background: #ffc107; color: black; }
+        .btn-info { background: #17a2b8; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn:hover { opacity: 0.9; }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .info { color: #17a2b8; }
+        .warning { color: #ffc107; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🧪 CampusLearn Comprehensive Test Suite</h1>
+        <p>Complete testing environment for authentication, database operations, and security validation</p>
+    </div>
+
+    <!-- System Status -->
+    <div class="test-section">
+        <h3>📊 System Status</h3>
+        <button class="btn btn-info" onclick="getSystemStatus()">🔄 Refresh Status</button>
+        <button class="btn btn-secondary" onclick="getUserCount()">👥 Get User Count</button>
+        <div id="systemStatus" class="results"></div>
+    </div>
+
+    <!-- Authentication Tests -->
+    <div class="test-section">
+        <h3>🔐 Authentication Tests</h3>
+        <div class="test-grid">
+            <!-- Registration Test -->
+            <div class="test-form">
+                <h4>📝 Registration Test</h4>
+                <div class="form-group">
+                    <label>First Name:</label>
+                    <input type="text" id="regFirstName" placeholder="John">
+                </div>
+                <div class="form-group">
+                    <label>Last Name:</label>
+                    <input type="text" id="regLastName" placeholder="Doe">
+                </div>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" id="regEmail" placeholder="john.doe@belgiumcampus.ac.za">
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" id="regPassword" placeholder="password123">
+                </div>
+                <div class="form-group">
+                    <label>Role:</label>
+                    <select id="regRole">
+                        <option value="Student">Student</option>
+                        <option value="Tutor">Tutor</option>
+                        <option value="Admin">Admin (Should Fail)</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="testRegistration()">📝 Test Registration</button>
+                <button class="btn btn-warning" onclick="testInvalidDomain()">❌ Test Invalid Domain</button>
+            </div>
+
+            <!-- Login Test -->
+            <div class="test-form">
+                <h4>🔑 Login Test</h4>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" id="loginEmail" value="admin@belgiumcampus.ac.za">
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" id="loginPassword" value="Admin@2024!">
+                </div>
+                <button class="btn btn-success" onclick="testLogin()">🔑 Test Login</button>
+                <button class="btn btn-warning" onclick="testInvalidLogin()">❌ Test Invalid Login</button>
+                <button class="btn btn-secondary" onclick="checkSession()">👤 Check Session</button>
+            </div>
+        </div>
+        <div id="authResults" class="results"></div>
+    </div>
+
+    <!-- Security Tests -->
+    <div class="test-section">
+        <h3>🛡️ Security Tests</h3>
+        <div class="test-grid">
+            <div class="test-form">
+                <h4>🚫 Domain Validation Tests</h4>
+                <button class="btn btn-warning" onclick="testInvalidDomains()">🌐 Test Invalid Domains</button>
+                <button class="btn btn-warning" onclick="testAdminPrevention()">🔒 Test Admin Prevention</button>
+                <button class="btn btn-info" onclick="testPasswordValidation()">🔐 Test Password Rules</button>
+            </div>
+            <div class="test-form">
+                <h4>⚡ Stress Tests</h4>
+                <button class="btn btn-info" onclick="runStressTest()">🔥 Run Stress Test</button>
+                <button class="btn btn-secondary" onclick="testConcurrentRegistrations()">⚡ Concurrent Tests</button>
+            </div>
+        </div>
+        <div id="securityResults" class="results"></div>
+    </div>
+
+    <!-- Database Tests -->
+    <div class="test-section">
+        <h3>🗄️ Database Tests</h3>
+        <button class="btn btn-info" onclick="testDatabaseConnectivity()">🔌 Test Database</button>
+        <button class="btn btn-secondary" onclick="generateSampleData()">📊 Generate Sample Data</button>
+        <button class="btn btn-success" onclick="validateSchemaIntegrity()">✅ Validate Schema</button>
+        <div id="databaseResults" class="results"></div>
+    </div>
+
+    <!-- Real-time Statistics -->
+    <div class="test-section">
+        <h3>📈 Real-time Statistics</h3>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalUsers">-</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="adminCount">-</div>
+                <div class="stat-label">Administrators</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="studentCount">-</div>
+                <div class="stat-label">Students</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="tutorCount">-</div>
+                <div class="stat-label">Tutors</div>
+            </div>
+        </div>
+        <button class="btn btn-info" onclick="refreshStatistics()" style="margin-top: 15px;">🔄 Refresh Statistics</button>
+    </div>
+
+    <script>
+        const API_BASE = '';
+        
+        // Utility functions
+        function logResult(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const timestamp = new Date().toLocaleTimeString();
+            const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : '📋';
+            element.innerHTML += `[${timestamp}] ${icon} ${message}\n`;
+            element.scrollTop = element.scrollHeight;
+        }
+
+        function clearResults(elementId) {
+            document.getElementById(elementId).innerHTML = '';
+        }
+
+        async function makeRequest(url, options = {}) {
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    },
+                    ...options
+                });
+                
+                const contentType = response.headers.get('content-type');
+                let data;
+                
+                if (contentType && contentType.includes('application/json')) {
+                    data = await response.json();
+                } else {
+                    data = await response.text();
+                }
+                
+                return { response, data, success: response.ok };
+            } catch (error) {
+                return { error: error.message, success: false };
+            }
+        }
+
+        // System Status Functions
+        async function getSystemStatus() {
+            clearResults('systemStatus');
+            logResult('systemStatus', 'Checking system status...', 'info');
+            
+            const { data, success, error } = await makeRequest('/api/auth/status');
+            
+            if (success) {
+                logResult('systemStatus', `System Status: ${JSON.stringify(data, null, 2)}`, 'success');
+            } else {
+                logResult('systemStatus', `System check failed: ${error || 'Unknown error'}`, 'error');
+            }
+        }
+
+        async function getUserCount() {
+            const { data, success, error } = await makeRequest('/api/auth/user-count');
+            
+            if (success) {
+                logResult('systemStatus', `User Count: ${JSON.stringify(data, null, 2)}`, 'success');
+                updateStatistics(data);
+            } else {
+                logResult('systemStatus', `User count failed: ${error || 'Unknown error'}`, 'error');
+            }
+        }
+
+        // Authentication Test Functions
+        async function testRegistration() {
+            clearResults('authResults');
+            
+            const regData = {
+                firstName: document.getElementById('regFirstName').value || 'Test',
+                lastName: document.getElementById('regLastName').value || 'User',
+                email: document.getElementById('regEmail').value || `test${Date.now()}@belgiumcampus.ac.za`,
+                password: document.getElementById('regPassword').value || 'TestPass123!',
+                role: document.getElementById('regRole').value || 'Student'
+            };
+            
+            logResult('authResults', `Testing registration for: ${regData.email}`, 'info');
+            
+            const { data, success, error } = await makeRequest('/api/auth/register', {
+                method: 'POST',
+                body: JSON.stringify(regData)
+            });
+            
+            if (success) {
+                logResult('authResults', `Registration successful: ${JSON.stringify(data, null, 2)}`, 'success');
+                getUserCount(); // Update user count
+            } else {
+                logResult('authResults', `Registration failed: ${error || JSON.stringify(data, null, 2)}`, 'error');
+            }
+        }
+
+        async function testLogin() {
+            const loginData = {
+                email: document.getElementById('loginEmail').value,
+                password: document.getElementById('loginPassword').value
+            };
+            
+            logResult('authResults', `Testing login for: ${loginData.email}`, 'info');
+            
+            const { data, success, error } = await makeRequest('/api/auth/login', {
+                method: 'POST',
+                body: JSON.stringify(loginData)
+            });
+            
+            if (success) {
+                logResult('authResults', `Login successful: ${JSON.stringify(data, null, 2)}`, 'success');
+            } else {
+                logResult('authResults', `Login failed: ${error || JSON.stringify(data, null, 2)}`, 'error');
+            }
+        }
+
+        async function testInvalidDomain() {
+            const regData = {
+                firstName: 'Invalid',
+                lastName: 'User',
+                email: 'invalid@gmail.com',
+                password: 'TestPass123!',
+                role: 'Student'
+            };
+            
+            logResult('authResults', `Testing invalid domain: ${regData.email}`, 'info');
+            
+            const { data, success } = await makeRequest('/api/auth/register', {
+                method: 'POST',
+                body: JSON.stringify(regData)
+            });
+            
+            if (!success) {
+                logResult('authResults', '✅ Domain validation working - invalid domain rejected', 'success');
+            } else {
+                logResult('authResults', '❌ Domain validation failed - invalid domain accepted', 'error');
+            }
+        }
+
+        async function checkSession() {
+            const { data, success } = await makeRequest('/api/auth/status');
+            
+            if (success) {
+                logResult('authResults', `Current session: ${JSON.stringify(data, null, 2)}`, 'info');
+            } else {
+                logResult('authResults', 'No active session', 'warning');
+            }
+        }
+
+        // Security Test Functions
+        async function testInvalidDomains() {
+            clearResults('securityResults');
+            const invalidDomains = [
+                'test@gmail.com',
+                'user@yahoo.com',
+                'admin@hotmail.com',
+                'student@outlook.com',
+                'tutor@belgiumcampus.com' // Wrong TLD
+            ];
+            
+            logResult('securityResults', 'Testing domain validation with invalid domains...', 'info');
+            
+            for (let i = 0; i < invalidDomains.length; i++) {
+                const email = invalidDomains[i];
+                const { success } = await makeRequest('/api/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        firstName: 'Test',
+                        lastName: 'User',
+                        email: email,
+                        password: 'TestPass123!',
+                        role: 'Student'
+                    })
+                });
+                
+                if (!success) {
+                    logResult('securityResults', `✅ ${email} correctly rejected`, 'success');
+                } else {
+                    logResult('securityResults', `❌ ${email} incorrectly accepted`, 'error');
+                }
+                
+                // Small delay to avoid overwhelming the server
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+        }
+
+        async function testAdminPrevention() {
+            logResult('securityResults', 'Testing admin role prevention...', 'info');
+            
+            const { success, data } = await makeRequest('/api/auth/register', {
+                method: 'POST',
+                body: JSON.stringify({
+                    firstName: 'Admin',
+                    lastName: 'Test',
+                    email: `admintest${Date.now()}@belgiumcampus.ac.za`,
+                    password: 'AdminTest123!',
+                    role: 'Admin'
+                })
+            });
+            
+            if (!success) {
+                logResult('securityResults', '✅ Admin role prevention working correctly', 'success');
+            } else {
+                logResult('securityResults', '❌ Admin role prevention failed', 'error');
+            }
+        }
+
+        async function runStressTest() {
+            logResult('securityResults', 'Running stress test with multiple requests...', 'info');
+            
+            const requests = [];
+            const startTime = Date.now();
+            
+            // Create 10 concurrent registration attempts
+            for (let i = 0; i < 10; i++) {
+                requests.push(
+                    makeRequest('/api/auth/register', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            firstName: `Stress${i}`,
+                            lastName: 'Test',
+                            email: `stress${i}_${Date.now()}@belgiumcampus.ac.za`,
+                            password: 'StressTest123!',
+                            role: 'Student'
+                        })
+                    })
+                );
+            }
+            
+            try {
+                const results = await Promise.all(requests);
+                const endTime = Date.now();
+                const successCount = results.filter(r => r.success).length;
+                
+                logResult('securityResults', 
+                    `Stress test completed in ${endTime - startTime}ms\n` +
+                    `Successful registrations: ${successCount}/10\n` +
+                    `Failed registrations: ${10 - successCount}/10`, 'info');
+                
+                getUserCount(); // Update user count
+            } catch (error) {
+                logResult('securityResults', `Stress test failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Database Test Functions
+        async function testDatabaseConnectivity() {
+            clearResults('databaseResults');
+            logResult('databaseResults', 'Testing database connectivity...', 'info');
+            
+            const { success, data, error } = await makeRequest('/api/auth/user-count');
+            
+            if (success) {
+                logResult('databaseResults', '✅ Database connectivity confirmed', 'success');
+                logResult('databaseResults', `Current user statistics: ${JSON.stringify(data, null, 2)}`, 'info');
+            } else {
+                logResult('databaseResults', `❌ Database connectivity failed: ${error}`, 'error');
+            }
+        }
+
+        async function generateSampleData() {
+            logResult('databaseResults', 'Generating sample user data...', 'info');
+            
+            const sampleUsers = [
+                { firstName: 'Alice', lastName: 'Johnson', email: 'alice.johnson@belgiumcampus.ac.za', role: 'Student' },
+                { firstName: 'Bob', lastName: 'Smith', email: 'bob.smith@belgiumcampus.ac.za', role: 'Tutor' },
+                { firstName: 'Carol', lastName: 'Davis', email: 'carol.davis@belgiumcampus.ac.za', role: 'Student' },
+                { firstName: 'David', lastName: 'Wilson', email: 'david.wilson@belgiumcampus.ac.za', role: 'Tutor' },
+                { firstName: 'Eve', lastName: 'Brown', email: 'eve.brown@belgiumcampus.ac.za', role: 'Student' }
+            ];
+            
+            let successCount = 0;
+            
+            for (const user of sampleUsers) {
+                const { success } = await makeRequest('/api/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        ...user,
+                        password: 'SamplePass123!'
+                    })
+                });
+                
+                if (success) {
+                    successCount++;
+                    logResult('databaseResults', `✅ Created user: ${user.firstName} ${user.lastName}`, 'success');
+                } else {
+                    logResult('databaseResults', `⚠️ User may already exist: ${user.firstName} ${user.lastName}`, 'warning');
+                }
+                
+                await new Promise(resolve => setTimeout(resolve, 200));
+            }
+            
+            logResult('databaseResults', `Sample data generation completed. ${successCount}/${sampleUsers.length} users created.`, 'info');
+            getUserCount();
+        }
+
+        // Statistics Functions
+        function updateStatistics(data) {
+            document.getElementById('totalUsers').textContent = data.total || '-';
+            document.getElementById('adminCount').textContent = data.admins || '-';
+            document.getElementById('studentCount').textContent = data.students || '-';
+            document.getElementById('tutorCount').textContent = data.tutors || '-';
+        }
+
+        async function refreshStatistics() {
+            await getUserCount();
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', function() {
+            getSystemStatus();
+            getUserCount();
+        });
+
+        // Auto-refresh statistics every 30 seconds
+        setInterval(refreshStatistics, 30000);
+    </script>
+</body>
+</html>
