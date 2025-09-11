@@ -23,6 +23,27 @@
         <div class="success-message" style="color: green; margin-bottom: 15px; text-align: center; padding: 10px; background: #e6ffe6; border-radius: 5px;">
             @ViewData["SuccessMessage"]
         </div>
+        
+        @* Show navigation options if user is logged in *@
+        @if (HttpContext.Session.GetString("UserEmail") != null)
+        {
+            <div style="background: #f0f8ff; padding: 15px; border-radius: 5px; margin-bottom: 15px; text-align: center;">
+                <h4 style="color: #2c5aa0; margin-bottom: 10px;">🎯 What would you like to do?</h4>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+                    <a href="/database-viewer.html" style="background: #007bff; color: white; padding: 8px 15px; border-radius: 4px; text-decoration: none; font-size: 14px;">📊 View Database</a>
+                    <a href="/test-auth.html" style="background: #28a745; color: white; padding: 8px 15px; border-radius: 4px; text-decoration: none; font-size: 14px;">🧪 Test Features</a>
+                    <a href="/comprehensive-test.html" style="background: #17a2b8; color: white; padding: 8px 15px; border-radius: 4px; text-decoration: none; font-size: 14px;">🔬 Full Test Suite</a>
+                    
+                    @if (HttpContext.Session.GetString("UserRole") == "Admin")
+                    {
+                        <a href="/api/auth/status" style="background: #dc3545; color: white; padding: 8px 15px; border-radius: 4px; text-decoration: none; font-size: 14px;">👑 Admin Panel</a>
+                    }
+                </div>
+                <div style="margin-top: 10px;">
+                    <small style="color: #666;">Logged in as: <strong>@HttpContext.Session.GetString("UserName")</strong> (@HttpContext.Session.GetString("UserRole"))</small>
+                </div>
+            </div>
+        }
     }
     
     <div class="input-container">

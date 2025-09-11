@@ -28,12 +28,27 @@ namespace CampusLearn_Web_App.Pages
 
 		public string? ErrorMessage { get; set; }
 
-		public void OnGet()
+		public void OnGet(string? success = null)
 		{
 			// Check for success message from registration
 			if (TempData["SuccessMessage"] != null)
 			{
 				ViewData["SuccessMessage"] = TempData["SuccessMessage"]?.ToString() ?? "";
+			}
+
+			// Handle login success messages
+			if (!string.IsNullOrEmpty(success))
+			{
+				var userName = HttpContext.Session.GetString("UserName") ?? "User";
+				var userRole = HttpContext.Session.GetString("UserRole") ?? "Unknown";
+				
+				ViewData["SuccessMessage"] = success switch
+				{
+					"admin" => $"🎉 Welcome back, {userName}! You are logged in as Administrator.",
+					"tutor" => $"🎓 Welcome back, {userName}! You are logged in as Tutor.",
+					"student" => $"📚 Welcome back, {userName}! You are logged in as Student.",
+					_ => $"✅ Welcome back, {userName}! Login successful."
+				};
 			}
 		}
 
@@ -74,13 +89,13 @@ namespace CampusLearn_Web_App.Pages
 						TempData["UserRole"] = user.Role;
 						TempData["LoginTimestamp"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-						// Redirect based on role
+						// Redirect based on role to existing pages
 						return user.Role switch
 						{
-							"Admin" => RedirectToPage("/Admin/Dashboard"),
-							"Tutor" => RedirectToPage("/Tutor/Dashboard"),
-							"Student" => RedirectToPage("/Student/Dashboard"),
-							_ => RedirectToPage("/LandingPage")
+							"Admin" => RedirectToPage("/LoginPage", new { success = "admin" }),
+							"Tutor" => RedirectToPage("/LoginPage", new { success = "tutor" }),
+							"Student" => RedirectToPage("/LoginPage", new { success = "student" }),
+							_ => RedirectToPage("/LoginPage", new { success = "general" })
 						};
 					}
 				}
