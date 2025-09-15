@@ -17,6 +17,7 @@ builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<ITopicService, TopicService>();
 
 // Add session support for authentication
 builder.Services.AddDistributedMemoryCache();
