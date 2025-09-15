@@ -23,7 +23,7 @@ namespace CampusLearn_Web_App.Models
         public string Content { get; set; } = string.Empty;
         
         [Column("sentdate")]
-        public DateTime SentDate { get; set; } = DateTime.Now;
+        public DateTime SentDate { get; set; } = DateTime.UtcNow;
         
         // Navigation properties
         [ForeignKey("SenderID")]
