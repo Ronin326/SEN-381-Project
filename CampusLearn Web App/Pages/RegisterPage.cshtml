@@ -1,0 +1,60 @@
+﻿@page
+@model CampusLearn_Web_App.Pages.RegisterPageModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Register";
+}
+
+<link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+<script src="~/scripts/LoginAndRegisterValidation.js" asp-append-version="true"></script>
+
+<div class="form-box">
+    <form class="form" method="post">
+        <p class="form-title">Register your account</p>
+        
+        @if (!string.IsNullOrEmpty(Model?.ErrorMessage))
+        {
+            <div class="error-message" style="color: red; margin-bottom: 15px; text-align: center; padding: 10px; background: #ffe6e6; border-radius: 5px;">
+                @Model.ErrorMessage
+            </div>
+        }
+
+        @if (ViewData["SuccessMessage"] != null)
+        {
+            <div class="success-message" style="color: green; margin-bottom: 15px; text-align: center; padding: 10px; background: #e6ffe6; border-radius: 5px;">
+                @ViewData["SuccessMessage"]
+            </div>
+        }
+        
+        <div class="input-container">
+            <input asp-for="FirstName" type="text" required class="input" placeholder="First Name">
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+            
+            <input asp-for="LastName" type="text" required class="input" placeholder="Last Name">
+            <span asp-validation-for="LastName" class="text-danger"></span>
+            
+            <input asp-for="Email" type="email" required class="input" placeholder="Email ">
+            <span asp-validation-for="Email" class="text-danger"></span>
+            
+            <input asp-for="Password" type="password" required class="input" placeholder="Password ">
+            <span asp-validation-for="Password" class="text-danger"></span>
+            
+            <input asp-for="ConfirmPassword" type="password" required class="input" placeholder="Confirm Password">
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            
+            <select asp-for="Role" class="input" style="margin-top: 10px;">
+                <option value="Student">Student</option>
+                <option value="Tutor">Tutor</option>
+            </select>
+            <span asp-validation-for="Role" class="text-danger"></span>
+        </div>
+        <button type="submit" class="submit">Sign up</button>
+        <div class="signup-link">
+            <p>Have an account? <a asp-page="/LoginPage">Login here</a></p>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
