@@ -1,0 +1,18 @@
+﻿@page
+@model CampusLearn_Web_App.Pages.Student.DashboardModel
+@{
+    ViewData["Title"] = "Student Dashboard";
+    Layout = "/Pages/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+
+<h1>Welcome to the Campus Learn Platform</h1>
+<div class="DashboardDiv" id="NotificationsDiv">
+    <h2 id="DashboardDivHeadings">Notifications</h2>
+    <p>No new notifications.</p>
+</div>
+<div class="DashboardDiv" id="StudentModulesDiv">
+    <h2 id="DashboardDivHeadings">Your Modules</h2>
+    <p>You are currently enrolled in the following modules:</p>
+</div>

@@ -1,5 +1,5 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
@@ -19,4 +19,68 @@ html {
 
 body {
   margin-bottom: 60px;
+}
+
+/* Navbar container */
+#mainNav {
+    display: flex;
+    justify-content: space-between; /* left + right */
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    background-color: #293a4d;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    font-family: Arial, sans-serif;
+}
+
+/* Left side (logo + links) */
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 2rem; /* space between logo and links */
+}
+
+/* Logo */
+#logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: #00afd6;
+}
+
+/* Links */
+.nav-links {
+    display: flex;
+    gap: 1.5rem; /* space between links */
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #d7d7d7;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover {
+    border-bottom: 2px solid #5ca321;
+    border-radius: 5px;
+}
+
+/* Right side (icons) */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.icon {
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: color 0.2s;
+}
+
+.icon:hover {
+    color: #6a1b9a;
 }
