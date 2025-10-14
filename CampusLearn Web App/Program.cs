@@ -59,8 +59,8 @@ app.MapControllers(); // Add API controller routing
 
 app.MapGet("/", context =>
 {
-	context.Response.Redirect("/LoginPage");
-	//context.Response.Redirect("/Student/Dashboard");
+	//context.Response.Redirect("/LoginPage");
+	context.Response.Redirect("/Student/Dashboard");
 	return Task.CompletedTask;
 });
 
