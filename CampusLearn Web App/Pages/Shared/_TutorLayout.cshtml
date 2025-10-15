@@ -14,19 +14,26 @@
             <div class="nav-left">
                 <a id="logo" asp-area="" asp-page="/Index">CampusLearn</a>
                 <ul class="nav-links">
-                    <li><a asp-page="/Dashboard">Dashboard</a></li>
-                    <li><a asp-page="/Modules">Modules</a></li>
-                    <li><a asp-page="/Chats">Chats</a></li>
+                    <li><a asp-page="../Tutor/TutorDashboard">Dashboard</a></li>
+                    <li><a asp-page="../Tutor/TutorCourses">Modules</a></li>
+                    <li><a asp-page="../Tutor/TutorChats">Chats</a></li>
                 </ul>
+
+                <!-- BURGER MENU -->
+                <div class="burger" id="burgerMenu">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
             </div>
+
             <div class="nav-right">
-                <span class="icon">🔔</span> <!-- notification -->
-                <span class="icon">👤</span> <!-- profile -->
+                <span class="icon">🔔</span>
+                <span class="icon">👤</span>
             </div>
         </nav>
-
     </header>
-    <div class="container">
+    <div class="container-fluid">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -60,6 +67,16 @@
         
         console.log("⚙️ CampusLearn: Application config:", window.campusLearnConfig);
     </script>
+        <script>
+        const burger = document.getElementById('burgerMenu');
+        const navLinks = document.querySelector('.nav-links');
+
+        burger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            burger.classList.toggle('active');
+        });
+    </script>
+
     
     <script src="~/js/site.js" asp-append-version="true"></script>
 

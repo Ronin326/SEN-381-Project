@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CampusLearn_Web_App</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/CampusLearn_Web_App.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav id="mainNav">
+            <div class="nav-left">
+                <a id="logo" asp-area="" asp-page="/Index">CampusLearn</a>
+                <ul class="nav-links">
+                    <li><a asp-page="../Student/StudentDashboard">Dashboard</a></li>
+                    <li><a asp-page="../Student/StudentCourses">Modules</a></li>
+                    <li><a asp-page="../Student/StudentChats">Chats</a></li>
+                </ul>
+
+                <!-- BURGER MENU -->
+                <div class="burger" id="burgerMenu">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+
+            <div class="nav-right">
+                <span class="icon">🔔</span>
+                <span class="icon">👤</span>
+            </div>
+        </nav>
+    </header>
+    <div class="container-fluid">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    
+    @* CampusLearn User Session Information for Console Logging *@
+    <script>
+        // Expose user session data to browser console
+        window.campusLearnUser = @Html.Raw(Json.Serialize(new {
+            isAuthenticated = Context.Session.GetString("UserId") != null,
+            userId = Context.Session.GetString("UserId"),
+            email = Context.Session.GetString("UserEmail"),
+            role = Context.Session.GetString("UserRole"),
+            firstName = Context.Session.GetString("UserFirstName"),
+            lastName = Context.Session.GetString("UserLastName")
+        }));
+        
+        // Log current page and user status
+        console.log("🎓 CampusLearn: Page rendered with user data");
+        console.log("👤 CampusLearn: Current user session:", window.campusLearnUser);
+        
+        // Database connection status from server
+        window.campusLearnConfig = {
+            databaseConnected: true, // This will be from server
+            domainValidation: "@@belgiumcampus.ac.za",
+            environment: "@(System.Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development")"
+        };
+        
+        console.log("⚙️ CampusLearn: Application config:", window.campusLearnConfig);
+    </script>
+        <script>
+        const burger = document.getElementById('burgerMenu');
+        const navLinks = document.querySelector('.nav-links');
+
+        burger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            burger.classList.toggle('active');
+        });
+    </script>
+
+    
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

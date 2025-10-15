@@ -1,0 +1,41 @@
+﻿@page
+@model CampusLearn_Web_App.Pages.Tutor.TutorChatsModel
+@{
+    ViewData["Title"] = "Tutor Chats";
+    Layout = "/Pages/Shared/_TutorLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/chats.css" asp-append-version="true" />
+
+<div class="chat-container">
+    <!-- Left: Contacts List -->
+    <div class="chat-sidebar">
+        <h3>Chats</h3>
+        <ul>
+            <li class="active">Tutor John</li>
+            <li>Support</li>
+            <li>Study Group</li>
+        </ul>
+    </div>
+
+    <!-- Right: Chat Window -->
+    <div class="chat-main">
+        <div class="chat-header">
+            <h3>Tutor John</h3>
+        </div>
+
+        <div class="chat-messages">
+            <div class="message received">
+                <p>Hey! How’s your assignment going?</p>
+            </div>
+            <div class="message sent">
+                <p>Almost done, just fixing a few errors!</p>
+            </div>
+        </div>
+
+        <div class="chat-input">
+            <input type="text" placeholder="Type a message..." />
+            <button>Send</button>
+        </div>
+    </div>
+</div>

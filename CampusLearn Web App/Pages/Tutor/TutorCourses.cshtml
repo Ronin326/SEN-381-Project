@@ -1,0 +1,57 @@
+﻿@page
+@model CampusLearn_Web_App.Pages.Tutor.TutorCoursesModel
+@{
+    ViewData["Title"] = "Tutor Courses";
+    Layout = "/Pages/Shared/_TutorLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/courses.css" asp-append-version="true" />
+
+<div class="course-tabs-container">
+    <div class="tabs">
+        <button class="tab active" id="tutor-tab" onclick="switchTab('tutor')">Tutor Courses</button>
+        <button class="tab" id="mycourses-tab" onclick="switchTab('mycourses')">My Courses</button>
+    </div>
+
+    <div class="tab-content active" id="tutor-content">
+        <h2 class="tab-heading">Tutor Courses</h2>
+        <p>Here you can view all courses you’re tutoring.</p>
+        <!-- Example Tutor Course Cards -->
+        <div class="courses-grid">
+            <div class="course-card">
+                <h3>Advanced Programming</h3>
+                <p>Students: 18</p>
+            </div>
+            <div class="course-card">
+                <h3>Systems Analysis</h3>
+                <p>Students: 12</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="mycourses-content">
+        <h2 class="tab-heading">My Courses</h2>
+        <p>These are your enrolled courses.</p>
+        <!-- Example My Course Cards -->
+        <div class="courses-grid">
+            <div class="course-card">
+                <h3>Database Management</h3>
+                <p>Progress: 85%</p>
+            </div>
+            <div class="course-card">
+                <h3>AI & Machine Learning</h3>
+                <p>Progress: 40%</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function switchTab(tab) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+        document.getElementById(`${tab}-tab`).classList.add('active');
+        document.getElementById(`${tab}-content`).classList.add('active');
+    }
+</script>
