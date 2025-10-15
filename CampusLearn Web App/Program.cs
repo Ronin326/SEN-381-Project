@@ -1,24 +1,43 @@
 using Microsoft.EntityFrameworkCore;
 using CampusLearn_Web_App.Data;
 using CampusLearn_Web_App.Services;
+using DotNetEnv;
+
+Env.Load(); // Load .env file if present
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddRazorPages();
-builder.Services.AddControllers(); // Add API controller support
+// ==============================
+// Add services to the container
+// ==============================
 
-// Add Entity Framework
+// Razor Pages & Controllers
+builder.Services.AddRazorPages();
+builder.Services.AddControllers(); // API controller support
+
+// HttpClient for ChatbotService
+builder.Services.AddHttpClient<ChatbotService>();
+
+// Custom chatbot content filter
+builder.Services.AddScoped<ContentFilterService>();
+
+// ==============================
+// Database & EF Core
+// ==============================
 builder.Services.AddDbContext<CampusLearnDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add custom services
+// ==============================
+// Custom application services
+// ==============================
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 
-// Add session support for authentication
+// ==============================
+// Session configuration
+// ==============================
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -29,19 +48,22 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-// Seed the database
+// ==============================
+// Database seeding
+// ==============================
 using (var scope = app.Services.CreateScope())
 {
     var seeder = scope.ServiceProvider.GetRequiredService<IDatabaseSeeder>();
     await seeder.SeedAsync();
 }
 
-// Configure the HTTP request pipeline.
+// ==============================
+// Configure HTTP pipeline
+// ==============================
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    app.UseHsts(); // Default HSTS value = 30 days
 }
 
 app.UseHttpsRedirection();
@@ -49,20 +71,24 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// Add session middleware
-app.UseSession();
+app.UseSession();      // Session middleware
+app.UseAuthorization(); // Auth middleware
 
-app.UseAuthorization();
-
+// Map routes
 app.MapRazorPages();
-app.MapControllers(); // Add API controller routing
+app.MapControllers(); // Enable API routes
 
+// ==============================
+// Default route (adjust as needed)
+// ==============================
 app.MapGet("/", context =>
 {
-	//context.Response.Redirect("/LoginPage");
-	//context.Response.Redirect("/Student/StudentDashboard");
-	context.Response.Redirect("/Tutor/TutorDashboard");
-	return Task.CompletedTask;
+    // Choose your default landing page:
+    // context.Response.Redirect("/LoginPage");
+    // context.Response.Redirect("/Student/StudentDashboard");
+    // context.Response.Redirect("/Tutor/TutorDashboard");
+    context.Response.Redirect("/TestChat"); // Chatbot test page
+    return Task.CompletedTask;
 });
 
 app.Run();

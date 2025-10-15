@@ -1,0 +1,37 @@
+{
+  
+  "navigation": {
+    "student_dashboard": "Students can view assignments, marks, and announcements on their dashboard. Accessible after login via the 'Student Dashboard' tab.",
+    "tutor_dashboard": "Tutors can upload course materials, grade submissions, and communicate with students through the Tutor Panel after login.",
+    "admin_dashboard": "Admins can manage users, view analytics, and reset passwords from the 'Admin Console' in the top navigation bar.",
+    "login_page": "Users can log in with their email and password. If credentials are forgotten, use the 'Forgot Password' option.",
+    "course_pages": "Each course has its own page showing syllabus details, tutor announcements, and submission areas."
+  },
+  "features": {
+    "chatbot": "The chatbot assists users with navigating CampusLearn and answering FAQs about dashboards, login, and features.",
+    "calendar": "Displays upcoming events, deadlines, and course sessions linked to your enrolled courses.",
+    "session_management": "CampusLearn automatically logs out inactive users after 30 minutes for security.",
+    "security": "Passwords are securely hashed and stored. All traffic uses HTTPS encryption for protection.",
+    "notifications": "Upcoming features include push notifications for new marks, messages, and timetable updates."
+  },
+  "faq": {
+    "login_issue": "If you're having trouble logging in, check your credentials or use 'Forgot Password'. For further help, contact admin@campuslearn.ac.za.",
+    "update_profile": "You can update your name, email, and profile picture by navigating to 'Settings' → 'Edit Profile'.",
+    "reset_password": "Use the 'Forgot Password' link on the Login Page to receive reset instructions by email.",
+    "upload_materials": "Tutors can upload course files in PDF, DOCX, or video format under the 'Materials' tab in their course dashboard.",
+    "view_marks": "Students can check their latest grades and feedback under the 'Marks' tab in their Student Dashboard.",
+    "contact_tutor": "Students can message their assigned tutor through the discussion panel on their course page.",
+    "report_bug": "To report a technical issue, go to 'Help' → 'Report a Problem' or email support@campuslearn.ac.za."
+  },
+  "technical": {
+    "architecture": "CampusLearn is built with ASP.NET Core Razor Pages, Entity Framework Core, and PostgreSQL for database management.",
+    "database_seeding": "When the app starts for the first time, it seeds default admin, tutor, and student accounts through DatabaseSeeder.cs.",
+    "services": "Core services include UserService, PasswordService, and ChatbotService for managing accounts and communication.",
+    "hosting": "The web app runs over HTTPS and uses session cookies to track user authentication."
+  },
+  "policies": {
+    "data_protection": "CampusLearn complies with POPIA regulations and never shares personal data with third parties.",
+    "acceptable_use": "Users must not share login details, upload copyrighted content, or misuse the chatbot for non-educational purposes."
+  }
+
+}
