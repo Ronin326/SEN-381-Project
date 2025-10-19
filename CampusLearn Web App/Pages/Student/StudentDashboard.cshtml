@@ -16,3 +16,59 @@
     <h2 id="DashboardDivHeadings">Your Modules</h2>
     <p>You are currently enrolled in the following modules:</p>
 </div>
+
+<!-- 💬 Floating Chatbot Icon -->
+<div id="chatbot-icon" title="Chat with CampusLearn">
+    💬
+</div>
+
+<!-- 🤖 Chatbot Panel -->
+<div id="chatbot-container" class="@(Model.IsChatOpen ? "" : "hidden")">
+    <div class="chat-header">
+        <h2>🤖 CampusLearn Chatbot</h2>
+        <span class="status-dot"></span>
+        <span>Online</span>
+        <button type="button" id="close-chat">✖</button>
+    </div>
+
+    <div id="chat-box" class="chat-box">
+        @foreach (var msg in Model.Messages)
+        {
+            <div class="chat-message @(msg.IsUser ? "user-msg" : "bot-msg")">
+                <div class="bubble">@msg.Content</div>
+            </div>
+        }
+    </div>
+
+    <form method="post" class="chat-input">
+        <input type="hidden" id="chat-open-state" name="IsChatOpen" value="@Model.IsChatOpen" />
+        <input type="text" name="UserMessage" value="@Model.UserMessage" placeholder="Type a message..." autocomplete="off" />
+        <button type="submit" class="send-btn">➤</button>
+    </form>
+</div>
+
+<script>
+    const chatbotIcon = document.getElementById("chatbot-icon");
+    const chatbotContainer = document.getElementById("chatbot-container");
+    const closeChat = document.getElementById("close-chat");
+    const chatStateInput = document.getElementById("chat-open-state");
+    const chatBox = document.getElementById("chat-box");
+
+    // Toggle chat visibility
+    chatbotIcon.addEventListener("click", () => {
+        chatbotContainer.classList.remove("hidden");
+        chatbotIcon.style.display = "none";
+        chatStateInput.value = "true"; // persist state
+    });
+
+    closeChat.addEventListener("click", () => {
+        chatbotContainer.classList.add("hidden");
+        chatbotIcon.style.display = "flex";
+        chatStateInput.value = "false"; // persist state
+    });
+
+    // Auto-scroll to latest message
+    if (chatBox) {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+</script>
