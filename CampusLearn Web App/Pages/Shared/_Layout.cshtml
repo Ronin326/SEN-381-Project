@@ -7,6 +7,19 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CampusLearn_Web_App.styles.css" asp-append-version="true" />
+    <style>
+        .user-info {
+            font-size: 0.9rem;
+            margin: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+        }
+        .user-info:hover {
+            background-color: rgba(0,0,0,0.1);
+            text-decoration: none !important;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -26,6 +39,16 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
                     </ul>
+                    
+                    @if (Context.Session.GetString("UserRole") != null)
+                    {
+                        <div class="d-flex align-items-center">
+                            <a href="/LoginPage" onclick="return handleLogout();" class="user-info text-dark text-decoration-none">
+                                👤 @Context.Session.GetString("UserName") (@Context.Session.GetString("UserRole"))
+                            </a>
+                            <form id="logoutForm" method="post" action="/api/auth/logout" style="display:none;"></form>
+                        </div>
+                    }
                 </div>
             </div>
         </nav>
@@ -39,6 +62,25 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     
+    <script>
+        function handleLogout() {
+            // Submit the logout form when clicking the user info area
+            document.getElementById('logoutForm').submit();
+        }
+    </script>
+    
+    <script>
+        // Handle logout click
+        function handleLogout() {
+            var form = document.getElementById('logoutForm');
+            if (form) {
+                form.submit();
+                return false;
+            }
+            return true;
+        }
+    </script>
+
     @* CampusLearn User Session Information for Console Logging *@
     <script>
         // Expose user session data to browser console
