@@ -1,0 +1,36 @@
+﻿@page
+@model CampusLearn_Web_App.Pages.Admin.Admin_CoursesModel
+@{
+    ViewData["Title"] = "Courses Managment";
+    Layout = "_AdminLayout";
+}
+
+<link rel="stylesheet" href="~/css/management.css" asp-append-version="true" />
+
+<div class="admin-container">
+    <h1 class="page-title">Course Management</h1>
+
+    <div class="action-bar">
+        <button class="btn-primary">Add Course</button>
+    </div>
+
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Course Name</th>
+                <th>Assigned Tutor</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Software Engineering</td>
+                <td>John Smith</td>
+                <td>
+                    <button class="btn-small">Edit</button>
+                    <button class="btn-small warn">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

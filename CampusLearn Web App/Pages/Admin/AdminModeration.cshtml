@@ -1,0 +1,36 @@
+﻿@page
+@model CampusLearn_Web_App.Pages.Admin.AdminModerationModel
+@{
+    ViewData["Title"] = "Moderation";
+    Layout = "_AdminLayout";
+}
+
+<link rel="stylesheet" href="~/css/management.css" asp-append-version="true" />
+
+<div class="admin-container">
+    <h1 class="page-title">Moderation</h1>
+
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Content</th>
+                <th>Reason</th>
+                <th>Flagged By</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>“This post violates rules.”</td>
+                <td>Offensive Language</td>
+                <td>Jane Doe</td>
+                <td>2025-10-18</td>
+                <td>
+                    <button class="btn-small">Delete</button>
+                    <button class="btn-small warn">Warn</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
