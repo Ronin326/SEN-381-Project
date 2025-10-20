@@ -17,6 +17,9 @@ namespace CampusLearn_Web_App.Data
         public DbSet<LearningMaterial> LearningMaterials { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<ForumPost> ForumPosts { get; set; }
+        public DbSet<ForumComment> ForumComments { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -130,12 +133,12 @@ namespace CampusLearn_Web_App.Data
                 entity.Property(e => e.ReceiverID).HasColumnName("receiverid");
                 entity.Property(e => e.Content).HasColumnName("content").IsRequired();
                 entity.Property(e => e.SentDate).HasColumnName("sentdate").HasDefaultValueSql("CURRENT_TIMESTAMP");
-                
+
                 entity.HasOne(e => e.Sender)
                     .WithMany(u => u.SentMessages)
                     .HasForeignKey(e => e.SenderID)
                     .OnDelete(DeleteBehavior.Cascade);
-                
+
                 entity.HasOne(e => e.Receiver)
                     .WithMany(u => u.ReceivedMessages)
                     .HasForeignKey(e => e.ReceiverID)
@@ -155,6 +158,45 @@ namespace CampusLearn_Web_App.Data
                     .WithMany(u => u.Notifications)
                     .HasForeignKey(e => e.UserID)
                     .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<ForumPost>(entity =>
+{
+    entity.ToTable("forumpost");
+    entity.HasKey(p => p.PostID);
+    entity.Property(p => p.PostID).HasColumnName("postid");
+
+    entity.HasOne(p => p.User)
+        .WithMany()
+        .HasForeignKey(p => p.UserID)
+        .OnDelete(DeleteBehavior.Restrict);
+
+    entity.HasOne(p => p.StudentModule)
+        .WithMany()
+        .HasForeignKey(p => p.StudentModuleID)
+        .OnDelete(DeleteBehavior.Cascade);
+});
+
+            modelBuilder.Entity<ForumComment>(entity =>
+            {
+                entity.ToTable("forumcomment");
+                entity.HasKey(c => c.CommentID);
+                entity.Property(c => c.CommentID).HasColumnName("commentid");
+
+                entity.HasOne(c => c.User)
+                    .WithMany()
+                    .HasForeignKey(c => c.UserID)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(c => c.ForumPost)
+                    .WithMany(p => p.Comments)
+                    .HasForeignKey(c => c.PostID)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(c => c.ParentComment)
+                    .WithMany(p => p.Replies)
+                    .HasForeignKey(c => c.ParentCommentID)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
             });
         }
     }

@@ -1,0 +1,75 @@
+@page
+@{
+    Layout = null;
+}
+@model CampusLearn_Web_App.Pages.Forum.PublicForumModel
+@{
+    ViewData["Title"] = "Public Forum";
+}
+
+<div class="forum-container">
+    <h1 class="forum-title">Public Forum</h1>
+    <p class="forum-subtitle">Course conversations in one place.</p>
+
+    @if (!Model.ForumPosts.Any())
+    {
+        <div class="empty-state">No posts yet.</div>
+    }
+    else
+    {
+        @foreach (var post in Model.ForumPosts)
+        {
+            <div class="forum-card">
+                <div class="forum-header">
+                    <h2>@post.Title</h2>
+                    <span class="forum-date">@post.CreationDate.ToString("dd MMM yyyy, HH:mm")</span>
+                </div>
+                <p class="forum-content">@post.Content</p>
+                <div class="forum-meta">by @(post.User?.FirstName ?? "Anonymous")</div>
+
+                <details class="comment-section">
+                    <summary>💬 View Comments (@post.Comments.Count)</summary>
+                    <div class="comments">
+                        @if (!post.Comments.Any())
+                        {
+                            <p class="no-comments">No comments yet.</p>
+                        }
+                        else
+                        {
+                            @foreach (var c in post.Comments.OrderBy(x => x.CreationDate))
+                            {
+                                <div class="comment">
+                                    <div class="comment-top">
+                                        <strong>@(c.User?.FirstName ?? "Anonymous")</strong>
+                                        <span class="comment-date">@c.CreationDate.ToString("dd MMM HH:mm")</span>
+                                    </div>
+                                    <p>@c.Comment</p>
+                                </div>
+                            }
+                        }
+                    </div>
+                </details>
+            </div>
+        }
+    }
+</div>
+
+<style>
+    .forum-container{width:90%;max-width:1000px;margin:3rem auto;color:#fff}
+    .forum-title{color:#00c8ff;font-size:2.4rem;margin:0 0 .5rem}
+    .forum-subtitle{color:#aaa;margin:0 0 1.5rem}
+    .forum-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,0,255,.25);border-radius:14px;padding:1.25rem;margin-bottom:1rem;transition:.25s}
+    .forum-card:hover{border-color:#ff00cc;box-shadow:0 0 10px rgba(255,0,255,.4)}
+    .forum-header{display:flex;justify-content:space-between;align-items:center}
+    .forum-header h2{color:#00c8ff;margin:0;font-size:1.35rem}
+    .forum-date{color:#999;font-size:.9rem}
+    .forum-content{margin:.5rem 0 0.25rem;color:#eee}
+    .forum-meta{color:#ff59e1;font-size:.95rem;margin-bottom:.5rem}
+    details.comment-section{background:rgba(255,255,255,.03);border-radius:10px;padding:.75rem}
+    details.comment-section summary{color:#00c8ff;cursor:pointer;font-weight:600}
+    .comment{background:rgba(255,255,255,.05);border-radius:8px;padding:.6rem;margin-top:.5rem}
+    .comment-top{display:flex;justify-content:space-between;color:#ddd}
+    .comment-date{color:#999;font-size:.85rem}
+    .no-comments{color:#aaa}
+    .empty-state{border:1px dashed rgba(255,0,255,.35);border-radius:12px;padding:1.5rem;color:#aaa;background:rgba(255,255,255,.05);text-align:center}
+</style>
