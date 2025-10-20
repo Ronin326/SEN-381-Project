@@ -83,13 +83,13 @@ app.MapControllers(); // Enable API routes
 // ==============================
 app.MapGet("/", context =>
 {
-	// Choose your default landing page:
-	//context.Response.Redirect("/LoginPage");
-	//context.Response.Redirect("/Student/StudentDashboard");
-	//context.Response.Redirect("/Tutor/TutorDashboard");
-	context.Response.Redirect("/Admin/AdminDashboard");
-	//context.Response.Redirect("/TestChat"); // Chatbot test page
-	return Task.CompletedTask;
+    // Choose your default landing page:
+    context.Response.Redirect("/LoginPage");
+    //context.Response.Redirect("/Student/StudentDashboard");
+    //context.Response.Redirect("/Tutor/TutorDashboard");
+    //context.Response.Redirect("/Admin/AdminDashboard");
+    //context.Response.Redirect("/TestChat"); // Chatbot test page
+    return Task.CompletedTask;
 });
 
 app.Run();

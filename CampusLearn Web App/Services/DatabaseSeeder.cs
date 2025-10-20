@@ -83,8 +83,36 @@ namespace CampusLearn_Web_App.Services
 
         private async Task SeedSampleDataAsync()
         {
-            // Only seed if no data exists
-            if (await _context.Users.CountAsync() > 1) // More than just the admin
+            // Create demo accounts if they don't exist
+            var demoAccounts = new[]
+            {
+                new { Email = "demo.admin@belgiumcampus.ac.za", FirstName = "Demo", LastName = "Admin", Role = "Admin", Password = "Admin" },
+                new { Email = "demo.tutor@belgiumcampus.ac.za", FirstName = "Demo", LastName = "Tutor", Role = "Tutor", Password = "Tutor" },
+                new { Email = "demo.student@belgiumcampus.ac.za", FirstName = "Demo", LastName = "Student", Role = "Student", Password = "Student" }
+            };
+
+            foreach (var account in demoAccounts)
+            {
+                if (!await _context.Users.AnyAsync(u => u.Email == account.Email))
+                {
+                    _context.Users.Add(new User
+                    {
+                        Email = account.Email,
+                        FirstName = account.FirstName,
+                        LastName = account.LastName,
+                        Role = account.Role,
+                        PasswordHash = _passwordService.HashPassword(account.Password)
+                    });
+
+                    _logger.LogInformation("✨ Created demo account - {Role}: {Email} (Password: {Password})", 
+                        account.Role, account.Email, account.Password);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            // Only seed other sample data if no data exists
+            if (await _context.Modules.AnyAsync())
                 return;
 
             // Sample Modules

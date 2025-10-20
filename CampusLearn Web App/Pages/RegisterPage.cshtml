@@ -45,6 +45,8 @@
         <input asp-for="ConfirmPassword" type="password" required class="input" placeholder="Confirm Password">
         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
     </div>
+    <!-- Keep role hidden and default to 'Student' to simplify registration (no visible selector) -->
+    <input type="hidden" asp-for="Role" />
     <button type="submit" class="submit">Sign up</button>
     <div class="signup-link">
         <p>Have an account? <a asp-page="/LoginPage">Login here</a></p>

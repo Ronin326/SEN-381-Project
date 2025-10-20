@@ -89,13 +89,13 @@ namespace CampusLearn_Web_App.Pages
 						TempData["UserRole"] = user.Role;
 						TempData["LoginTimestamp"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-						// Redirect based on role to existing pages
+						// Redirect based on role to appropriate dashboard
 						return user.Role switch
 						{
-							"Admin" => RedirectToPage("/LoginPage", new { success = "admin" }),
-							"Tutor" => RedirectToPage("/LoginPage", new { success = "tutor" }),
-							"Student" => RedirectToPage("/LoginPage", new { success = "student" }),
-							_ => RedirectToPage("/LoginPage", new { success = "general" })
+							"Admin" => RedirectToPage("/Admin/AdminDashboard"),
+							"Tutor" => RedirectToPage("/Tutor/TutorDashboard"),
+							"Student" => RedirectToPage("/Student/StudentDashboard"),
+							_ => RedirectToPage("/Student/StudentDashboard") // Default to student dashboard
 						};
 					}
 				}

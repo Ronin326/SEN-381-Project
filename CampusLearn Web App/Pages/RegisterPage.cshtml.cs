@@ -45,7 +45,6 @@ namespace CampusLearn_Web_App.Pages
 		public string ConfirmPassword { get; set; } = string.Empty;
 
 		[BindProperty]
-		[Required]
 		[RegistrationRole] // This prevents admin role selection
 		public string Role { get; set; } = "Student"; // Default to Student
 
