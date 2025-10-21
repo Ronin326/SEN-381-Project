@@ -5,9 +5,7 @@ namespace CampusLearn_Web_App.Data
 {
     public class CampusLearnDbContext : DbContext
     {
-        public CampusLearnDbContext(DbContextOptions<CampusLearnDbContext> options) : base(options)
-        {
-        }
+        public CampusLearnDbContext(DbContextOptions<CampusLearnDbContext> options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Module> Modules { get; set; }
@@ -22,10 +20,12 @@ namespace CampusLearn_Web_App.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure User table
+            // -----------------------
+            // User
+            // -----------------------
             modelBuilder.Entity<User>(entity =>
             {
-                entity.ToTable("User"); // Match your schema exactly
+                entity.ToTable("User");
                 entity.HasKey(e => e.UserID);
                 entity.Property(e => e.UserID).HasColumnName("userid");
                 entity.Property(e => e.FirstName).HasColumnName("firstname").IsRequired().HasMaxLength(50);
@@ -36,10 +36,12 @@ namespace CampusLearn_Web_App.Data
                 entity.HasIndex(e => e.Email).IsUnique();
             });
 
-            // Configure Module table
+            // -----------------------
+            // Module
+            // -----------------------
             modelBuilder.Entity<Module>(entity =>
             {
-                entity.ToTable("module"); // lowercase to match your schema
+                entity.ToTable("module");
                 entity.HasKey(e => e.ModuleID);
                 entity.Property(e => e.ModuleID).HasColumnName("moduleid");
                 entity.Property(e => e.ModuleName).HasColumnName("modulename").IsRequired().HasMaxLength(100);
@@ -47,43 +49,53 @@ namespace CampusLearn_Web_App.Data
                 entity.HasIndex(e => e.ModuleCode).IsUnique();
             });
 
-            // Configure StudentModule relationships
+            // -----------------------
+            // StudentModule
+            // -----------------------
             modelBuilder.Entity<StudentModule>(entity =>
             {
-                entity.ToTable("studentmodule"); // lowercase to match schema
+                entity.ToTable("studentmodule");
                 entity.HasKey(e => e.StudentModuleID);
                 entity.Property(e => e.StudentModuleID).HasColumnName("studentmoduleid");
                 entity.Property(e => e.UserID).HasColumnName("userid");
                 entity.Property(e => e.ModuleID).HasColumnName("moduleid");
+
                 entity.HasOne(e => e.User)
                     .WithMany(u => u.StudentModules)
                     .HasForeignKey(e => e.UserID)
                     .OnDelete(DeleteBehavior.Cascade);
+
                 entity.HasOne(e => e.Module)
                     .WithMany(m => m.StudentModules)
                     .HasForeignKey(e => e.ModuleID)
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // Configure TutorModule relationships
+            // -----------------------
+            // TutorModule
+            // -----------------------
             modelBuilder.Entity<TutorModule>(entity =>
             {
-                entity.ToTable("tutormodule"); // lowercase to match schema
+                entity.ToTable("tutormodule");
                 entity.HasKey(e => e.TutorModuleID);
                 entity.Property(e => e.TutorModuleID).HasColumnName("tutormoduleid");
                 entity.Property(e => e.UserID).HasColumnName("userid");
                 entity.Property(e => e.ModuleID).HasColumnName("moduleid");
+
                 entity.HasOne(e => e.User)
                     .WithMany(u => u.TutorModules)
                     .HasForeignKey(e => e.UserID)
                     .OnDelete(DeleteBehavior.Cascade);
+
                 entity.HasOne(e => e.Module)
                     .WithMany(m => m.TutorModules)
                     .HasForeignKey(e => e.ModuleID)
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // Configure Topic relationships
+            // -----------------------
+            // Topic
+            // -----------------------
             modelBuilder.Entity<Topic>(entity =>
             {
                 entity.ToTable("Topic");
@@ -94,17 +106,21 @@ namespace CampusLearn_Web_App.Data
                 entity.Property(e => e.CreationDate).HasColumnName("creationdate").IsRequired();
                 entity.Property(e => e.UserID).HasColumnName("userid");
                 entity.Property(e => e.ModuleID).HasColumnName("moduleid");
+
                 entity.HasOne(e => e.User)
                     .WithMany(u => u.Topics)
                     .HasForeignKey(e => e.UserID)
                     .OnDelete(DeleteBehavior.Cascade);
+
                 entity.HasOne(e => e.Module)
                     .WithMany(m => m.Topics)
                     .HasForeignKey(e => e.ModuleID)
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // Configure LearningMaterial relationships
+            // -----------------------
+            // LearningMaterial
+            // -----------------------
             modelBuilder.Entity<LearningMaterial>(entity =>
             {
                 entity.ToTable("LearningMaterial");
@@ -114,35 +130,48 @@ namespace CampusLearn_Web_App.Data
                 entity.Property(e => e.FileType).HasColumnName("filetype").HasMaxLength(50);
                 entity.Property(e => e.UploadDate).HasColumnName("uploaddate");
                 entity.Property(e => e.TopicID).HasColumnName("topicid");
+
                 entity.HasOne(e => e.Topic)
                     .WithMany(t => t.LearningMaterials)
                     .HasForeignKey(e => e.TopicID)
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // Configure Message relationships
+            // -----------------------
+            // Message
+            // -----------------------
             modelBuilder.Entity<Message>(entity =>
             {
-                entity.ToTable("Message");
+                entity.ToTable("Message"); // keep consistent with your schema
                 entity.HasKey(e => e.MessageID);
                 entity.Property(e => e.MessageID).HasColumnName("messageid");
                 entity.Property(e => e.SenderID).HasColumnName("senderid");
                 entity.Property(e => e.ReceiverID).HasColumnName("receiverid");
                 entity.Property(e => e.Content).HasColumnName("content").IsRequired();
-                entity.Property(e => e.SentDate).HasColumnName("sentdate").HasDefaultValueSql("CURRENT_TIMESTAMP");
-                
+
+                // Default timestamp from DB (Postgres)
+                entity.Property(e => e.SentDate)
+                      .HasColumnName("sentdate")
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
                 entity.HasOne(e => e.Sender)
                     .WithMany(u => u.SentMessages)
                     .HasForeignKey(e => e.SenderID)
                     .OnDelete(DeleteBehavior.Cascade);
-                
+
                 entity.HasOne(e => e.Receiver)
                     .WithMany(u => u.ReceivedMessages)
                     .HasForeignKey(e => e.ReceiverID)
                     .OnDelete(DeleteBehavior.Cascade);
+
+                // ? Helpful indexes for chat queries
+                entity.HasIndex(e => new { e.SenderID, e.ReceiverID, e.SentDate });
+                entity.HasIndex(e => new { e.ReceiverID, e.SenderID, e.SentDate });
             });
 
-            // Configure Notification relationships
+            // -----------------------
+            // Notification
+            // -----------------------
             modelBuilder.Entity<Notification>(entity =>
             {
                 entity.ToTable("Notification");
@@ -151,6 +180,7 @@ namespace CampusLearn_Web_App.Data
                 entity.Property(e => e.Message).HasColumnName("message").IsRequired().HasMaxLength(255);
                 entity.Property(e => e.CreatedAt).HasColumnName("createdat").HasDefaultValueSql("CURRENT_TIMESTAMP");
                 entity.Property(e => e.UserID).HasColumnName("userid");
+
                 entity.HasOne(e => e.User)
                     .WithMany(u => u.Notifications)
                     .HasForeignKey(e => e.UserID)

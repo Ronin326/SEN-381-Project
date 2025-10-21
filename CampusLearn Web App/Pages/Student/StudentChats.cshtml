@@ -8,34 +8,331 @@
 <link rel="stylesheet" href="~/css/chats.css" asp-append-version="true" />
 
 <div class="chat-container">
-    <!-- Left: Contacts List -->
     <div class="chat-sidebar">
         <h3>Chats</h3>
-        <ul>
-            <li class="active">Tutor John</li>
-            <li>Support</li>
-            <li>Study Group</li>
-        </ul>
+        <button class="new-chat-btn" type="button">+ New Chat</button>
+        <ul id="chatList"></ul>
     </div>
 
-    <!-- Right: Chat Window -->
     <div class="chat-main">
         <div class="chat-header">
-            <h3>Tutor John</h3>
+            <h3 id="chatWith">Select a chat</h3>
         </div>
 
-        <div class="chat-messages">
-            <div class="message received">
-                <p>Hey! How’s your assignment going?</p>
-            </div>
-            <div class="message sent">
-                <p>Almost done, just fixing a few errors!</p>
-            </div>
+        <div class="chat-messages" id="chatMessages" aria-live="polite">
+            <div class="no-messages">Pick someone from the left or start a new chat.</div>
         </div>
 
         <div class="chat-input">
-            <input type="text" placeholder="Type a message..." />
-            <button>Send</button>
+            <input type="text" placeholder="Type a message..." id="messageInput" aria-label="Type your message" />
+            <button id="sendBtn" type="button">Send</button>
         </div>
     </div>
 </div>
+
+<div id="memberModal" class="member-modal" role="dialog" aria-modal="true" aria-labelledby="memberModalTitle">
+    <div class="member-modal-content">
+        <span id="closeModal" class="close-btn" role="button" tabindex="0" aria-label="Close">&times;</span>
+        <h3 id="memberModalTitle">Select a member to start a chat</h3>
+        <div class="member-search">
+            <input type="text" id="memberSearch" placeholder="Search name or email..." aria-label="Search members" />
+        </div>
+        <ul id="memberList" class="member-list"></ul>
+        <div id="memberEmpty" style="display:none;">No members found.</div>
+    </div>
+</div>
+
+<form id="af" method="post" style="display:none;">
+    @Html.AntiForgeryToken()
+</form>
+
+@section Scripts {
+    <script>
+        const newChatBtn = document.querySelector(".new-chat-btn");
+        const modal = document.getElementById("memberModal");
+        const closeModal = document.getElementById("closeModal");
+        const memberList = document.getElementById("memberList");
+        const memberEmpty = document.getElementById("memberEmpty");
+        const memberSearch = document.getElementById("memberSearch");
+        const chatHeader = document.getElementById("chatWith");
+        const chatMessages = document.getElementById("chatMessages");
+        const messageInput = document.getElementById("messageInput");
+        const sendBtn = document.getElementById("sendBtn");
+        const chatList = document.getElementById("chatList");
+
+        let currentOtherUserId = null;
+        let currentUserId = null;
+        let allMembers = [];
+
+        newChatBtn.addEventListener("click", async () => {
+            modal.style.display = "flex";
+            await loadMembers();
+        });
+
+        function hideModal() { modal.style.display = "none"; }
+        closeModal.addEventListener("click", hideModal);
+        closeModal.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") hideModal(); });
+        window.addEventListener("click", (e) => { if (e.target === modal) hideModal(); });
+
+        function getInitials(name) {
+            if (!name) return "?";
+            const parts = name.trim().split(/\s+/);
+            const first = parts[0]?.[0] || "";
+            const last = parts.length > 1 ? parts[parts.length - 1][0] : "";
+            return (first + last).toUpperCase();
+        }
+
+        function getRequestVerificationToken() {
+            const el = document.querySelector('#af input[name="__RequestVerificationToken"]');
+            return el ? el.value : '';
+        }
+
+        function appendMessage(m) {
+            const div = document.createElement("div");
+            div.className = (m.senderId === currentUserId) ? "message sent" : "message received";
+            const p = document.createElement("p");
+            p.textContent = m.content;
+            div.appendChild(p);
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function renderMessages(messages) {
+            chatMessages.innerHTML = "";
+            if (!messages || messages.length === 0) {
+                chatMessages.innerHTML = "<div class='no-messages'>No messages yet. Say hello!</div>";
+                return;
+            }
+            messages.forEach(m => appendMessage(m));
+        }
+
+        function setActiveThread(userId) {
+            document.querySelectorAll("#chatList .thread-item").forEach(n => n.classList.remove("active"));
+            const li = document.querySelector(`#chatList .thread-item[data-user-id="${userId}"]`);
+            if (li) {
+                li.classList.add("active");
+                li.scrollIntoView({ block: "nearest" });
+            }
+        }
+
+        function ensureThreadVisible(member) {
+            let li = document.querySelector(`#chatList .thread-item[data-user-id="${member.userId}"]`);
+            if (li) return li;
+
+            li = document.createElement("li");
+            li.className = "thread-item active";
+            li.dataset.userId = member.userId;
+
+            li.innerHTML = `
+                <div class="thread-line">
+                    <strong class="thread-name">${member.fullName}</strong>
+                </div>
+                <div class="thread-sub" title=""></div>
+            `;
+
+            li.addEventListener("click", () => {
+                document.querySelectorAll("#chatList .thread-item").forEach(n => n.classList.remove("active"));
+                li.classList.add("active");
+                openConversation(member);
+            });
+
+            chatList.prepend(li);
+            return li;
+        }
+
+        async function loadMembers() {
+            memberList.innerHTML = "";
+            memberEmpty.style.display = "none";
+
+            const res = await fetch(`?handler=Members`);
+            if (!res.ok) { memberEmpty.style.display = "block"; return; }
+
+            allMembers = await res.json();
+            renderMemberList(allMembers);
+            memberSearch.value = "";
+            memberSearch.focus();
+        }
+
+        function renderMemberList(members) {
+            memberList.innerHTML = "";
+
+            if (!members || members.length === 0) {
+                memberEmpty.style.display = "block";
+                return;
+            }
+            memberEmpty.style.display = "none";
+
+            members.forEach(m => {
+                const li = document.createElement("li");
+                li.className = "member-item";
+                li.dataset.userId = m.userId;
+
+                const avatar = document.createElement("div");
+                avatar.className = "member-avatar";
+                avatar.textContent = getInitials(m.fullName);
+
+                const meta = document.createElement("div");
+                meta.className = "member-meta";
+
+                const name = document.createElement("div");
+                name.className = "member-name";
+                name.textContent = m.fullName;
+
+                const email = document.createElement("div");
+                email.className = "member-email";
+                email.textContent = m.email;
+
+                meta.appendChild(name);
+                meta.appendChild(email);
+
+                if (m.role) {
+                    const badge = document.createElement("span");
+                    badge.className = "member-badge";
+                    badge.textContent = m.role.toString();
+                    li.appendChild(badge);
+                } else {
+                    const spacer = document.createElement("div");
+                    spacer.style.width = "1px";
+                    spacer.style.height = "1px";
+                    li.appendChild(spacer);
+                }
+
+                li.prepend(meta);
+                li.prepend(avatar);
+
+                li.addEventListener("click", () => openConversation(m));
+                memberList.appendChild(li);
+            });
+        }
+
+        memberSearch?.addEventListener("input", () => {
+            const q = memberSearch.value.trim().toLowerCase();
+            const filtered = !q
+                ? allMembers
+                : allMembers.filter(m =>
+                    (m.fullName || "").toLowerCase().includes(q) ||
+                    (m.email || "").toLowerCase().includes(q)
+                  );
+            renderMemberList(filtered);
+        });
+
+        async function loadThreads() {
+            chatList.innerHTML = `<li class="thread-item"><em>Loading…</em></li>`;
+
+            const res = await fetch(`?handler=Threads`);
+            if (!res.ok) {
+                chatList.innerHTML = `<li class="thread-item error">Could not load chats.</li>`;
+                return;
+            }
+
+            const data = await res.json();
+            chatList.innerHTML = "";
+
+            if (!data || data.length === 0) {
+                chatList.innerHTML = `<li class="thread-item empty">No conversations yet. Start one with “New Chat”.</li>`;
+                return;
+            }
+
+            data.forEach(t => {
+                const li = document.createElement("li");
+                li.className = "thread-item";
+                li.dataset.userId = t.userId;
+
+                li.innerHTML = `
+                    <div class="thread-line">
+                        <strong class="thread-name">${t.fullName}</strong>
+                    </div>
+                    <div class="thread-sub" title="${t.lastMessage ?? ""}">${t.lastMessage ?? ""}</div>
+                `;
+
+                li.addEventListener("click", () => {
+                    document.querySelectorAll("#chatList .thread-item").forEach(n => n.classList.remove("active"));
+                    li.classList.add("active");
+                    openConversation(t);
+                });
+
+                chatList.appendChild(li);
+            });
+        }
+
+        async function openConversation(member) {
+            hideModal();
+
+            ensureThreadVisible(member);
+            setActiveThread(member.userId);
+
+            currentOtherUserId = member.userId;
+            chatHeader.textContent = member.fullName;
+            chatMessages.innerHTML = "<div class='loading'>Loading...</div>";
+
+            const res = await fetch(`?handler=Messages&otherUserId=${member.userId}`);
+            if (!res.ok) {
+                chatMessages.innerHTML = "<div class='error'>Unable to load conversation.</div>";
+                return;
+            }
+
+            const payload = await res.json();
+            currentUserId = payload.currentUserId;
+            renderMessages(payload.messages || []);
+            messageInput.focus();
+        }
+
+        async function sendMessage() {
+            const text = messageInput.value.trim();
+            if (!text) return;
+            if (!currentOtherUserId) {
+                alert("Please select a member to chat with first.");
+                return;
+            }
+
+            sendBtn.disabled = true;
+            try {
+                const res = await fetch(`?handler=Message`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // 'RequestVerificationToken': getRequestVerificationToken() // enable if you add [ValidateAntiForgeryToken]
+                    },
+                    body: JSON.stringify({ receiverId: currentOtherUserId, content: text })
+                });
+
+                if (!res.ok) {
+                    const err = await res.text();
+                    console.error("Send failed:", err);
+                    alert("Failed to send message.");
+                    return;
+                }
+
+                const created = await res.json();
+
+                if (!currentUserId) currentUserId = created.senderId;
+                appendMessage(created);
+
+                messageInput.value = "";
+                messageInput.focus();
+
+                await loadThreads();
+                setActiveThread(currentOtherUserId);
+            } catch (e) {
+                console.error("Send exception:", e);
+                alert("An error occurred while sending the message.");
+            } finally {
+                sendBtn.disabled = false;
+            }
+        }
+
+        function updateSendState() { sendBtn.disabled = !messageInput.value.trim(); }
+        messageInput.addEventListener("input", updateSendState);
+        updateSendState();
+
+        sendBtn.addEventListener("click", sendMessage);
+        messageInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", loadThreads);
+    </script>
+}
