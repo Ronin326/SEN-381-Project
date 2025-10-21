@@ -1,7 +1,7 @@
 ﻿@page
 @model CampusLearn_Web_App.Pages.Admin.Admin_UsersModel
 @{
-    ViewData["Title"] = "User Managment";
+    ViewData["Title"] = "User Management";
     Layout = "_AdminLayout";
 }
 
@@ -10,34 +10,55 @@
 <div class="admin-container">
     <h1 class="page-title">User Management</h1>
 
-    <div class="search-bar">
-        <input type="text" placeholder="Search users..." />
-        <button>Search</button>
-    </div>
+    <form method="get" class="search-bar" id="searchForm">
+        <input type="text" name="searchTerm" id="searchInput" placeholder="Search users..."/>
+        <button type="submit">Search</button>
+    </form>
 
     <table class="admin-table">
         <thead>
             <tr>
-                <th>Name</th>
+                <th>ID</th>
+                <th>Full Name</th>
                 <th>Email</th>
                 <th>Role</th>
-                <th>Status</th>
-                <th>Last Login</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Ruan le Roux</td>
-                <td>ruan@campuslearn.com</td>
-                <td>Tutor</td>
-                <td><span class="status online">Active</span></td>
-                <td>2025-10-19</td>
-                <td>
-                    <button class="btn-small">View</button>
-                    <button class="btn-small warn">Suspend</button>
-                </td>
-            </tr>
+            @if (Model.Users != null && Model.Users.Any())
+            {
+                foreach (var user in Model.Users)
+                {
+                    <tr>
+                        <td>@user.UserID</td>
+                        <td>@($"{user.FirstName} {user.LastName}")</td>
+                        <td>@user.Email</td>
+                        <td>@user.Role</td>
+                        <td>
+                            <button class="btn-small">View</button>
+                            <button class="btn-small warn">Suspend</button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="no-results">No users found.</td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>
+
+<script>
+    // Clear search bar after submitting the form
+    const form = document.getElementById("searchForm");
+    form.addEventListener("submit", () => {
+        setTimeout(() => {
+            document.getElementById("searchInput").value = "";
+            document.getElementById("searchInput").textContent = "";
+        }, 100);
+    });
+</script>
