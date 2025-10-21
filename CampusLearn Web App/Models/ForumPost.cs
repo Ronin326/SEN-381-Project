@@ -10,7 +10,7 @@ namespace CampusLearn_Web_App.Models
         public int UserID { get; set; }
         public User? User { get; set; }
 
-        public int StudentModuleID { get; set; }
+        public int? StudentModuleID { get; set; }
         public StudentModule? StudentModule { get; set; }
 
         // Core Content

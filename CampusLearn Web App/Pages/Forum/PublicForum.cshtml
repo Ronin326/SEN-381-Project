@@ -1,75 +1,178 @@
 @page
 @{
-    Layout = null;
+    Layout = null;   // temporary so the page renders
 }
 @model CampusLearn_Web_App.Pages.Forum.PublicForumModel
-@{
-    ViewData["Title"] = "Public Forum";
-}
+
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<style>
+    body {
+        background-color: #0b0b0f;
+        color: #e0e0e0;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    h2 {
+        color: #00c8ff;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .forum-container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    .create-post {
+        background-color: #15151c;
+        border: 1px solid #ff66cc;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 0 10px rgba(255, 102, 204, 0.15);
+    }
+
+    .create-post input,
+    .create-post textarea {
+        background-color: #1e1e26;
+        color: #fff;
+        border: 1px solid #333;
+    }
+
+    .create-post button {
+        background-color: #ff66cc;
+        border: none;
+        color: white;
+        font-weight: 600;
+        border-radius: 8px;
+        padding: 8px 18px;
+        transition: 0.2s;
+    }
+
+    .create-post button:hover {
+        background-color: #ff4bb5;
+    }
+
+    .post-card {
+        background-color: #14141b;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-left: 4px solid #00c8ff;
+        box-shadow: 0 2px 10px rgba(0, 200, 255, 0.1);
+    }
+
+    .post-title {
+        font-size: 1.3rem;
+        color: #00c8ff;
+        font-weight: 600;
+    }
+
+    .post-meta {
+        font-size: 0.9rem;
+        color: #999;
+        margin-bottom: 10px;
+    }
+
+    .comment-section {
+        margin-top: 15px;
+        padding-left: 15px;
+        border-left: 2px solid #ff66cc;
+    }
+
+    .comment {
+        margin-bottom: 10px;
+        background-color: #1a1a22;
+        border-radius: 8px;
+        padding: 10px;
+    }
+
+    .comment small {
+        color: #aaa;
+        font-size: 0.8rem;
+    }
+
+    .comment-form textarea {
+        background-color: #1e1e26;
+        color: white;
+        border: 1px solid #444;
+    }
+
+    .comment-form button {
+        background-color: #00c8ff;
+        border: none;
+        padding: 6px 14px;
+        border-radius: 6px;
+        font-weight: 500;
+    }
+
+    .comment-form button:hover {
+        background-color: #00aadd;
+    }
+
+</style>
 
 <div class="forum-container">
-    <h1 class="forum-title">Public Forum</h1>
-    <p class="forum-subtitle">Course conversations in one place.</p>
+    <h2>Public Forum</h2>
+    <p class="text-secondary">Course discussions and insights in one place.</p>
 
-    @if (!Model.ForumPosts.Any())
-    {
-        <div class="empty-state">No posts yet.</div>
-    }
-    else
+    <!-- Create Post -->
+    <div class="create-post">
+        <h5 class="text-pink mb-3" style="color:#ff66cc;">Create a New Post</h5>
+        <form method="post" asp-page-handler="AddPost">
+            <div class="mb-2">
+                <input class="form-control" name="Title" placeholder="Enter post title" required />
+            </div>
+            <div class="mb-3">
+                <textarea class="form-control" name="Content" rows="3" placeholder="Write your message..." required></textarea>
+            </div>
+            <button type="submit">Post</button>
+        </form>
+    </div>
+
+    <!-- Display Posts -->
+    @if (Model.ForumPosts != null && Model.ForumPosts.Any())
     {
         @foreach (var post in Model.ForumPosts)
         {
-            <div class="forum-card">
-                <div class="forum-header">
-                    <h2>@post.Title</h2>
-                    <span class="forum-date">@post.CreationDate.ToString("dd MMM yyyy, HH:mm")</span>
-                </div>
-                <p class="forum-content">@post.Content</p>
-                <div class="forum-meta">by @(post.User?.FirstName ?? "Anonymous")</div>
+            <div class="post-card">
+                <div class="post-title">@post.Title</div>
+                <div class="post-meta">Posted by <strong>@(post.User?.FirstName ?? "Anonymous")</strong> on @post.CreationDate.ToString("dd MMM yyyy HH:mm")</div>
+                <p>@post.Content</p>
 
-                <details class="comment-section">
-                    <summary>💬 View Comments (@post.Comments.Count)</summary>
-                    <div class="comments">
-                        @if (!post.Comments.Any())
+                <div class="comment-section">
+                    <h6 style="color:#ff66cc;">Comments</h6>
+
+                    @if (post.Comments != null && post.Comments.Any())
+                    {
+                        @foreach (var comment in post.Comments)
                         {
-                            <p class="no-comments">No comments yet.</p>
+                            <div class="comment">
+                                <strong>@(comment.User?.FirstName ?? "Anonymous")</strong>
+                                <p>@comment.Comment</p>
+                                <small>@comment.CreationDate.ToString("dd MMM yyyy HH:mm")</small>
+                            </div>
                         }
-                        else
-                        {
-                            @foreach (var c in post.Comments.OrderBy(x => x.CreationDate))
-                            {
-                                <div class="comment">
-                                    <div class="comment-top">
-                                        <strong>@(c.User?.FirstName ?? "Anonymous")</strong>
-                                        <span class="comment-date">@c.CreationDate.ToString("dd MMM HH:mm")</span>
-                                    </div>
-                                    <p>@c.Comment</p>
-                                </div>
-                            }
-                        }
-                    </div>
-                </details>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No comments yet.</p>
+                    }
+
+                    <form method="post" asp-page-handler="AddComment" class="comment-form mt-2">
+                        <input type="hidden" name="PostId" value="@post.PostID" />
+                        <textarea class="form-control mb-2" name="Content" placeholder="Add a comment..." rows="2"></textarea>
+                        <button type="submit">Reply</button>
+                    </form>
+                </div>
             </div>
         }
     }
+    else
+    {
+        <div class="text-center text-muted">No posts yet.</div>
+    }
 </div>
-
-<style>
-    .forum-container{width:90%;max-width:1000px;margin:3rem auto;color:#fff}
-    .forum-title{color:#00c8ff;font-size:2.4rem;margin:0 0 .5rem}
-    .forum-subtitle{color:#aaa;margin:0 0 1.5rem}
-    .forum-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,0,255,.25);border-radius:14px;padding:1.25rem;margin-bottom:1rem;transition:.25s}
-    .forum-card:hover{border-color:#ff00cc;box-shadow:0 0 10px rgba(255,0,255,.4)}
-    .forum-header{display:flex;justify-content:space-between;align-items:center}
-    .forum-header h2{color:#00c8ff;margin:0;font-size:1.35rem}
-    .forum-date{color:#999;font-size:.9rem}
-    .forum-content{margin:.5rem 0 0.25rem;color:#eee}
-    .forum-meta{color:#ff59e1;font-size:.95rem;margin-bottom:.5rem}
-    details.comment-section{background:rgba(255,255,255,.03);border-radius:10px;padding:.75rem}
-    details.comment-section summary{color:#00c8ff;cursor:pointer;font-weight:600}
-    .comment{background:rgba(255,255,255,.05);border-radius:8px;padding:.6rem;margin-top:.5rem}
-    .comment-top{display:flex;justify-content:space-between;color:#ddd}
-    .comment-date{color:#999;font-size:.85rem}
-    .no-comments{color:#aaa}
-    .empty-state{border:1px dashed rgba(255,0,255,.35);border-radius:12px;padding:1.5rem;color:#aaa;background:rgba(255,255,255,.05);text-align:center}
-</style>

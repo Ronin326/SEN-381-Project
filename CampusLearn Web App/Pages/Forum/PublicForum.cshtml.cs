@@ -16,36 +16,56 @@ namespace CampusLearn_Web_App.Pages.Forum
         }
 
         public List<ForumPost> ForumPosts { get; set; } = new();
-        [BindProperty] public ForumPost NewPost { get; set; } = new();
-        [BindProperty] public ForumComment NewComment { get; set; } = new();
+
+        [BindProperty]
+        public string Title { get; set; }
+
+        [BindProperty]
+        public string Content { get; set; }
 
         public async Task OnGetAsync()
         {
             ForumPosts = await _context.ForumPosts
-                .Include(p => p.User)
-                .Include(p => p.Comments)
-                .OrderByDescending(p => p.CreationDate)
+                .Include(f => f.User)
+                .Include(f => f.Comments)
+                    .ThenInclude(c => c.User)
+                .OrderByDescending(f => f.CreationDate)
                 .ToListAsync();
         }
 
-        public async Task<IActionResult> OnPostCreatePostAsync()
+        public async Task<IActionResult> OnPostAddPostAsync()
         {
-            if (!ModelState.IsValid) return Page();
+            if (string.IsNullOrWhiteSpace(Title) || string.IsNullOrWhiteSpace(Content))
+                return RedirectToPage();
 
-            NewPost.CreationDate = DateTime.UtcNow;
-            _context.ForumPosts.Add(NewPost);
+            var newPost = new ForumPost
+            {
+                Title = Title,
+                Content = Content,
+                CreationDate = DateTime.UtcNow,
+                UserID = 1 // change this later for logged-in user
+            };
+
+            _context.ForumPosts.Add(newPost);
             await _context.SaveChangesAsync();
 
-            return RedirectToPage();
+            return RedirectToPage(); // forces a reload of posts
         }
 
-        public async Task<IActionResult> OnPostAddCommentAsync(int postId)
+        public async Task<IActionResult> OnPostAddCommentAsync(int PostId, string Content)
         {
-            if (!ModelState.IsValid) return Page();
+            if (string.IsNullOrWhiteSpace(Content))
+                return RedirectToPage();
 
-            NewComment.PostID = postId;
-            NewComment.CreationDate = DateTime.UtcNow;
-            _context.ForumComments.Add(NewComment);
+            var comment = new ForumComment
+            {
+                PostID = PostId,
+                Comment = Content,
+                CreationDate = DateTime.UtcNow,
+                UserID = 1 // placeholder user
+            };
+
+            _context.ForumComments.Add(comment);
             await _context.SaveChangesAsync();
 
             return RedirectToPage();

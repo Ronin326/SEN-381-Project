@@ -3,6 +3,7 @@ using System;
 using CampusLearn_Web_App.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CampusLearn_Web_App.Migrations
 {
     [DbContext(typeof(CampusLearnDbContext))]
-    partial class CampusLearnDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251021221825_MakeStudentModuleOptional")]
+    partial class MakeStudentModuleOptional
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
