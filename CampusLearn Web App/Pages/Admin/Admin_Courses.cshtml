@@ -17,20 +17,34 @@
     <table class="admin-table">
         <thead>
             <tr>
-                <th>Course Name</th>
-                <th>Assigned Tutor</th>
+                <th>ModuleID</th>
+                <th>ModuleName</th>
+                <th>ModuleCode</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Software Engineering</td>
-                <td>John Smith</td>
-                <td>
-                    <button class="btn-small">Edit</button>
-                    <button class="btn-small warn">Delete</button>
-                </td>
-            </tr>
+            @if (Model.Modules != null && Model.Modules.Any())
+            {
+                foreach (var module in Model.Modules)
+                {
+                    <tr>
+                        <td>@module.ModuleID</td>
+                        <td>@($"{module.ModuleName}")</td>
+                        <td>@module.ModuleCode</td>
+                        <td>
+                            <button class="btn-small">Edit</button>
+                            <button class="btn-small warn">Delete</button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" class="no-results">No courses found.</td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>

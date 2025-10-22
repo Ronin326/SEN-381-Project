@@ -186,3 +186,18 @@ body {
         transform: translateY(0);
     }
 }
+
+.btn-primary {
+    background: linear-gradient(90deg, #00afd6, #e5027e);
+    border: none;
+    color: #fff;
+    padding: 0.6rem 1.3rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+    .btn-primary:hover {
+        filter: brightness(1.2);
+        transform: translateY(-2px);
+    }

@@ -53,7 +53,7 @@ var app = builder.Build();
 // ==============================
 using (var scope = app.Services.CreateScope())
 {
-    var seeder = scope.ServiceProvider.GetRequiredService<IDatabaseSeeder>();
+    var seeder = scope.ServiceProvider.GetRequiredService<CampusLearnDbContext>();
     await seeder.SeedAsync();
 }
 

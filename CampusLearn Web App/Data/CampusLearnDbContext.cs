@@ -8,8 +8,122 @@ namespace CampusLearn_Web_App.Data
         public CampusLearnDbContext(DbContextOptions<CampusLearnDbContext> options) : base(options)
         {
         }
+		public async Task SeedAsync()
+		{
+			// Ensure the database exists
+			await this.Database.EnsureCreatedAsync();
 
-        public DbSet<User> Users { get; set; }
+			// Check if there are already any modules in the database
+			if (!this.Modules.Any())
+			{
+				// ==============================
+				// ? Seed dummy Module records
+				// ==============================
+				var modules = new List<Module>
+		{
+			new Module { ModuleCode = "ACW181", ModuleName = "Academic Writing 181" },
+			new Module { ModuleCode = "COA181", ModuleName = "Computer Architecture 181" },
+			new Module { ModuleCode = "DBD181", ModuleName = "Database Development 181" },
+			new Module { ModuleCode = "INF181", ModuleName = "Information Systems 181" },
+			new Module { ModuleCode = "INL101", ModuleName = "Innovation and Leadership 101" },
+			new Module { ModuleCode = "INL102", ModuleName = "Innovation and Leadership 102" },
+			new Module { ModuleCode = "LPR181", ModuleName = "Linear Programming 181" },
+			new Module { ModuleCode = "MAT181", ModuleName = "Mathematics 181" },
+			new Module { ModuleCode = "NWD181", ModuleName = "Networking Development 181" },
+			new Module { ModuleCode = "PRG181", ModuleName = "Programming 181" },
+			new Module { ModuleCode = "PRG182", ModuleName = "Programming 182" },
+			new Module { ModuleCode = "STA181", ModuleName = "Statistics 181" },
+			new Module { ModuleCode = "WPR181", ModuleName = "Web Programming 181" },
+			new Module { ModuleCode = "BUM181", ModuleName = "Business Management 181" },
+			new Module { ModuleCode = "ENT181", ModuleName = "Entrepreneurship 181" },
+			new Module { ModuleCode = "DBD281", ModuleName = "Database Development 281" },
+			new Module { ModuleCode = "INF281", ModuleName = "Information Systems 281" },
+			new Module { ModuleCode = "INL201", ModuleName = "Innovation and Leadership 201" },
+			new Module { ModuleCode = "INL202", ModuleName = "Innovation and Leadership 202" },
+			new Module { ModuleCode = "LPR281", ModuleName = "Linear Programming 281" },
+			new Module { ModuleCode = "MAT281", ModuleName = "Mathematics 281" },
+			new Module { ModuleCode = "PRG281", ModuleName = "Programming 281" },
+			new Module { ModuleCode = "PRG282", ModuleName = "Programming 282" },
+			new Module { ModuleCode = "PMM281", ModuleName = "Project Management 281" },
+			new Module { ModuleCode = "STA281", ModuleName = "Statistics 281" },
+			new Module { ModuleCode = "WPR281", ModuleName = "Web Programming 281" },
+			new Module { ModuleCode = "SAD281", ModuleName = "Software Analysis & Design 281" },
+			new Module { ModuleCode = "DWH281", ModuleName = "Data Warehousing 281" },
+			new Module { ModuleCode = "IOT281", ModuleName = "Internet Of Things 281" },
+			new Module { ModuleCode = "SWT281", ModuleName = "Software Testing 281" },
+			new Module { ModuleCode = "RSH381", ModuleName = "Research Methods 381" },
+			new Module { ModuleCode = "DBD381", ModuleName = "Database Development 381" },
+			new Module { ModuleCode = "INL321", ModuleName = "Innovation and Leadership 321" },
+			new Module { ModuleCode = "LPR381", ModuleName = "Linear Programming 381" },
+			new Module { ModuleCode = "MLG381", ModuleName = "Machine Learning 381" },
+			new Module { ModuleCode = "PRJ381", ModuleName = "Project 381" },
+			new Module { ModuleCode = "PMM381", ModuleName = "Project Management 381" },
+			new Module { ModuleCode = "PRG381", ModuleName = "Programming 381" },
+			new Module { ModuleCode = "SEN381", ModuleName = "Software Engineering 381" },
+			new Module { ModuleCode = "WPR381", ModuleName = "Web Programming 381" },
+			new Module { ModuleCode = "BIN381", ModuleName = "Data Science 381" },
+			new Module { ModuleCode = "DBA381", ModuleName = "Database Administration 381" },
+			new Module { ModuleCode = "STA381", ModuleName = "Statistics 381" },
+			new Module { ModuleCode = "INM381", ModuleName = "Innovation Management 381" },
+			new Module { ModuleCode = "MLG382", ModuleName = "Machine Learning 382" },
+			new Module { ModuleCode = "UAX381", ModuleName = "User Experience Design 381" },
+			new Module { ModuleCode = "AIT481", ModuleName = "Applied Information Technology 481" },
+			new Module { ModuleCode = "AIT482", ModuleName = "Applied Information Technology 482" },
+			new Module { ModuleCode = "DST481", ModuleName = "Dissertation 481" },
+			new Module { ModuleCode = "ACW171", ModuleName = "Academic Writing 171" },
+			new Module { ModuleCode = "COA171", ModuleName = "Computer Architecture 171" },
+			new Module { ModuleCode = "DBD171", ModuleName = "Database Development 171" },
+			new Module { ModuleCode = "ENG171", ModuleName = "English Communication 171" },
+			new Module { ModuleCode = "INF171", ModuleName = "Information Systems 171" },
+			new Module { ModuleCode = "INL111", ModuleName = "Innovation and Leadership 101" },
+			new Module { ModuleCode = "INL112", ModuleName = "Innovation and Leadership 102" },
+			new Module { ModuleCode = "MAT171", ModuleName = "Mathematics 171" },
+			new Module { ModuleCode = "NWD171", ModuleName = "Networking Development 171" },
+			new Module { ModuleCode = "PRG171", ModuleName = "Programming 171" },
+			new Module { ModuleCode = "PRG172", ModuleName = "Programming 172" },
+			new Module { ModuleCode = "STA171", ModuleName = "Statistics 171" },
+			new Module { ModuleCode = "WPR171", ModuleName = "Web Programming 171" },
+			new Module { ModuleCode = "BUM171", ModuleName = "Business Management 171" },
+			new Module { ModuleCode = "ENT171", ModuleName = "Entrepreneurship 171" },
+			new Module { ModuleCode = "CNA271", ModuleName = "Cloud-Native Application Architecture 271" },
+			new Module { ModuleCode = "DBD221", ModuleName = "Database Development 221" },
+			new Module { ModuleCode = "ERP271", ModuleName = "Enterprise Systems 271" },
+			new Module { ModuleCode = "ETH271", ModuleName = "Ethics 271" },
+			new Module { ModuleCode = "INF271", ModuleName = "Information Systems 271" },
+			new Module { ModuleCode = "INL211", ModuleName = "Innovation and Leadership 201" },
+			new Module { ModuleCode = "INL212", ModuleName = "Innovation and Leadership 202" },
+			new Module { ModuleCode = "LPR171", ModuleName = "Linear Programming 171" },
+			new Module { ModuleCode = "PRG271", ModuleName = "Programming 271" },
+			new Module { ModuleCode = "PRG272", ModuleName = "Programming 272" },
+			new Module { ModuleCode = "PMM271", ModuleName = "Project Management 271" },
+			new Module { ModuleCode = "STA271", ModuleName = "Statistics 271" },
+			new Module { ModuleCode = "WPR271", ModuleName = "Web Programming 271" },
+			new Module { ModuleCode = "IOT271", ModuleName = "Internet Of Things 271" },
+			new Module { ModuleCode = "SWT271", ModuleName = "Software Testing 271" },
+			new Module { ModuleCode = "BIN371", ModuleName = "Business Intelligence 371" },
+			new Module { ModuleCode = "CNA371", ModuleName = "Cloud-Native Application Programming 371" },
+			new Module { ModuleCode = "DAL371", ModuleName = "Data Analytics 371" },
+			new Module { ModuleCode = "DBD371", ModuleName = "Database Development 371" },
+			new Module { ModuleCode = "INL371", ModuleName = "Innovation and Leadership 371" },
+			new Module { ModuleCode = "PRG371", ModuleName = "Programming 371" },
+			new Module { ModuleCode = "PRJ371", ModuleName = "Project 371" },
+			new Module { ModuleCode = "PMM371", ModuleName = "Project Management 371" },
+			new Module { ModuleCode = "SAD371", ModuleName = "Software Analysis & Design 371" },
+			new Module { ModuleCode = "SEN371", ModuleName = "Software Engineering 371" },
+			new Module { ModuleCode = "WPR371", ModuleName = "Web Programming 371" },
+			new Module { ModuleCode = "INM371", ModuleName = "Innovation Management 371" },
+			new Module { ModuleCode = "UAX371", ModuleName = "User Experience Design 371" },
+			new Module { ModuleCode = "ENG281", ModuleName = "English 381" }
+		};
+
+				this.Modules.AddRange(modules);
+				await this.SaveChangesAsync();
+			}
+		}
+
+
+
+		public DbSet<User> Users { get; set; }
         public DbSet<Module> Modules { get; set; }
         public DbSet<StudentModule> StudentModules { get; set; }
         public DbSet<TutorModule> TutorModules { get; set; }
