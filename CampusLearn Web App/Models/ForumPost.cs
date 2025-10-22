@@ -9,7 +9,8 @@ namespace CampusLearn_Web_App.Models
         // Foreign Keys
         public int UserID { get; set; }
         public User? User { get; set; }
-
+        public int Upvotes { get; set; } = 0;
+        public int Downvotes { get; set; } = 0;
         public int? StudentModuleID { get; set; }
         public StudentModule? StudentModule { get; set; }
 

@@ -23,7 +23,7 @@ namespace CampusLearn_Web_App.Pages.Forum
         [BindProperty]
         public string Content { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(int? moduleId)
         {
             ForumPosts = await _context.ForumPosts
                 .Include(f => f.User)
@@ -31,7 +31,25 @@ namespace CampusLearn_Web_App.Pages.Forum
                     .ThenInclude(c => c.User)
                 .OrderByDescending(f => f.CreationDate)
                 .ToListAsync();
+
+            IQueryable<ForumPost> query = _context.ForumPosts
+                .Include(p => p.User)
+                .Include(p => p.Comments)
+                .ThenInclude(c => c.User);
+
+            if (moduleId.HasValue)
+                query = query.Where(p => p.StudentModule.ModuleID == moduleId.Value);
+
+            ForumPosts = await query
+                .OrderByDescending(p => p.CreationDate)
+                .ToListAsync();
+
+            Modules = await _context.Modules.ToListAsync();
+            SelectedModuleId = moduleId;
+            return Page();
         }
+
+        
 
         public async Task<IActionResult> OnPostAddPostAsync()
         {
@@ -70,5 +88,32 @@ namespace CampusLearn_Web_App.Pages.Forum
 
             return RedirectToPage();
         }
+        public async Task<IActionResult> OnPostUpvotePostAsync(int postId)
+        {
+            var post = await _context.ForumPosts.FirstOrDefaultAsync(p => p.PostID == postId);
+            if (post == null) return NotFound();
+
+            post.Upvotes += 1;
+            await _context.SaveChangesAsync();
+
+            return RedirectToPage(new { moduleId = SelectedModuleId });
+        }
+
+        public async Task<IActionResult> OnPostUpvoteCommentAsync(int commentId)
+        {
+            var comment = await _context.ForumComments.FirstOrDefaultAsync(c => c.CommentID == commentId);
+            if (comment == null) return NotFound();
+
+            comment.Upvotes += 1;
+            await _context.SaveChangesAsync();
+
+            return RedirectToPage(new { moduleId = SelectedModuleId });
+        }
+
+
+        // Properties for Razor
+        public List<Module> Modules { get; set; } = new();
+        public int? SelectedModuleId { get; set; }
+
     }
 }
