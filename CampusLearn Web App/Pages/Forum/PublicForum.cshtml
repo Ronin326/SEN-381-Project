@@ -181,15 +181,16 @@
     <h2>Public Forum</h2>
     <p class="text-secondary mb-4">Course discussions and insights in one place.</p>
 
-    <!-- Filter Bar -->
     <div class="filter-bar">
-        <form method="get" class="d-flex align-items-center">
+        <form method="get">
             <label for="moduleSelect" class="me-2 text-light">Filter by Module:</label>
-            <select id="moduleSelect" name="moduleId" onchange="this.form.submit()">
+            <select id="moduleSelect" name="moduleId" class="form-select d-inline-block w-auto"
+                onchange="this.form.submit()">
                 <option value="">All Modules</option>
                 @foreach (var module in Model.Modules)
                 {
-                    <option value="@module.ModuleID" selected="@(Model.SelectedModuleId == module.ModuleID)">
+                    <option value="@module.ModuleID"
+                        selected="@(Model.SelectedModuleId == module.ModuleID ? "selected" : null)">
                         @module.ModuleName
                     </option>
                 }
