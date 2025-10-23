@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using CampusLearn_Web_App.Data;
 using CampusLearn_Web_App.Models;
 
-namespace CampusLearn_Web_App.Pages.Tutor
+namespace CampusLearn_Web_App.Pages.Chat
 {
     public class ChatModel : PageModel
     {
@@ -21,7 +21,7 @@ namespace CampusLearn_Web_App.Pages.Tutor
         [BindProperty]
         public string NewMessage { get; set; } = string.Empty;
 
-        public int CurrentUserId { get; set; } = 1; // Replace this with logged-in user logic
+        public int CurrentUserId { get; set; } = 1; // Replace with actual logged-in user id from session/auth
         public string ReceiverName { get; set; } = "User";
         public List<Message> Messages { get; set; } = new();
 
@@ -58,7 +58,6 @@ namespace CampusLearn_Web_App.Pages.Tutor
             _context.Messages.Add(msg);
             await _context.SaveChangesAsync();
 
-            // After sending, reload chat view
             return RedirectToPage(new { receiverId = ReceiverId });
         }
     }

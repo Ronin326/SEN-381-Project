@@ -126,7 +126,7 @@ namespace CampusLearn_Web_App.Data
             // Configure Message relationships
             modelBuilder.Entity<Message>(entity =>
             {
-                entity.ToTable("Message");
+                entity.ToTable("message");
                 entity.HasKey(e => e.MessageID);
                 entity.Property(e => e.MessageID).HasColumnName("messageid");
                 entity.Property(e => e.SenderID).HasColumnName("senderid");

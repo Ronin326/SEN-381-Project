@@ -1,41 +1,70 @@
 ﻿@page
-@model CampusLearn_Web_App.Pages.Tutor.TutorChatsModel
+@model CampusLearn_Web_App.Pages.Chat.ChatModel
 @{
-    ViewData["Title"] = "Tutor Chats";
-    Layout = "/Pages/Shared/_TutorLayout.cshtml";
+    ViewData["Title"] = "Chat";
 }
 
-<link rel="stylesheet" href="~/css/chats.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/chat.css" />
 
-<div class="chat-container">
-    <!-- Left: Contacts List -->
+<div class="chat-wrapper">
     <div class="chat-sidebar">
         <h3>Chats</h3>
         <ul>
-            <li class="active">Tutor John</li>
-            <li>Support</li>
-            <li>Study Group</li>
+            <li><a href="/Chat/Chat?receiverId=2">Tutor John</a></li>
+            <li><a href="/Chat/Chat?receiverId=3">Support</a></li>
+            <li><a href="/Chat/Chat?receiverId=4">Study Group</a></li>
         </ul>
     </div>
 
-    <!-- Right: Chat Window -->
     <div class="chat-main">
-        <div class="chat-header">
-            <h3>Tutor John</h3>
+        <h2>@Model.ReceiverName</h2>
+
+        <div id="chatContainer" class="chat-container">
+            <partial name="_MessageListPartial" model="Model.Messages" />
         </div>
 
-        <div class="chat-messages">
-            <div class="message received">
-                <p>Hey! How’s your assignment going?</p>
-            </div>
-            <div class="message sent">
-                <p>Almost done, just fixing a few errors!</p>
-            </div>
-        </div>
-
-        <div class="chat-input">
-            <input type="text" placeholder="Type a message..." />
-            <button>Send</button>
-        </div>
+        <form id="chatForm" method="post" class="chat-input">
+            <input type="hidden" asp-for="ReceiverId" />
+            <input asp-for="NewMessage" placeholder="Type a message..." autocomplete="off" />
+            <button type="submit">Send</button>
+        </form>
     </div>
 </div>
+
+@section Scripts {
+<script>
+    const form = document.getElementById('chatForm');
+    const container = document.getElementById('chatContainer');
+
+    // Submit form via AJAX
+    form.addEventListener('submit', async e => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const response = await fetch(window.location.pathname + window.location.search, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newChat = doc.querySelector('#chatContainer').innerHTML;
+            container.innerHTML = newChat;
+            form.querySelector('input[name="NewMessage"]').value = '';
+            container.scrollTop = container.scrollHeight;
+        }
+    });
+
+    // Auto-refresh messages every 5 seconds
+    setInterval(async () => {
+        const res = await fetch(window.location.href);
+        const html = await res.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const updated = doc.querySelector('#chatContainer').innerHTML;
+        container.innerHTML = updated;
+        container.scrollTop = container.scrollHeight;
+    }, 5000);
+</script>
+}

@@ -1,0 +1,12 @@
+@model List<CampusLearn_Web_App.Models.Message>
+@{
+    var currentUserId = 1; // Must match the CurrentUserId in ChatModel
+}
+
+@foreach (var msg in Model)
+{
+    <div class="@(msg.SenderID == currentUserId ? "sent" : "received")">
+        <p>@msg.Content</p>
+        <small>@msg.SentDate.ToLocalTime().ToString("HH:mm")</small>
+    </div>
+}
