@@ -4,11 +4,11 @@
 Write-Host "Starting CampusLearn System..." -ForegroundColor Cyan
 
 # --- PostgreSQL Paths ---
-$pgBinPath = "C:\Program Files\PostgreSQL\18\bin"
-$dataPath = "C:\Program Files\PostgreSQL\18\data"
+$pgBinPath = "C:\Program Files\PostgreSQL\17\bin"
+$dataPath = "C:\Program Files\PostgreSQL\17\data"
 $logPath = "$env:USERPROFILE\PostgreSQL\logfile"
 $pgUser = "postgres"
-$pgPassword = "Nattas123"  # change this if your password differs
+$pgPassword = "password"  # change this if your password differs
 $dbName = "campuslearn"
 
 
