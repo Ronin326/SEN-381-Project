@@ -17,6 +17,7 @@ builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 // Add session support for authentication
 builder.Services.AddDistributedMemoryCache();
@@ -59,8 +60,8 @@ app.MapControllers(); // Add API controller routing
 
 app.MapGet("/", context =>
 {
-	context.Response.Redirect("/LoginPage");
-	return Task.CompletedTask;
+    context.Response.Redirect("/LoginPage");
+    return Task.CompletedTask;
 });
 
 app.Run();

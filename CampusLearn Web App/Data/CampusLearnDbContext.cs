@@ -130,12 +130,12 @@ namespace CampusLearn_Web_App.Data
                 entity.Property(e => e.ReceiverID).HasColumnName("receiverid");
                 entity.Property(e => e.Content).HasColumnName("content").IsRequired();
                 entity.Property(e => e.SentDate).HasColumnName("sentdate").HasDefaultValueSql("CURRENT_TIMESTAMP");
-                
+
                 entity.HasOne(e => e.Sender)
                     .WithMany(u => u.SentMessages)
                     .HasForeignKey(e => e.SenderID)
                     .OnDelete(DeleteBehavior.Cascade);
-                
+
                 entity.HasOne(e => e.Receiver)
                     .WithMany(u => u.ReceivedMessages)
                     .HasForeignKey(e => e.ReceiverID)
@@ -145,12 +145,13 @@ namespace CampusLearn_Web_App.Data
             // Configure Notification relationships
             modelBuilder.Entity<Notification>(entity =>
             {
-                entity.ToTable("Notification");
+                entity.ToTable("notification");  // lowercase to match your schema
                 entity.HasKey(e => e.NotificationID);
                 entity.Property(e => e.NotificationID).HasColumnName("notificationid");
                 entity.Property(e => e.Message).HasColumnName("message").IsRequired().HasMaxLength(255);
                 entity.Property(e => e.CreatedAt).HasColumnName("createdat").HasDefaultValueSql("CURRENT_TIMESTAMP");
                 entity.Property(e => e.UserID).HasColumnName("userid");
+                entity.Property(e => e.IsRead).HasColumnName("isread").HasDefaultValue(false);  // ADD THIS LINE
                 entity.HasOne(e => e.User)
                     .WithMany(u => u.Notifications)
                     .HasForeignKey(e => e.UserID)
