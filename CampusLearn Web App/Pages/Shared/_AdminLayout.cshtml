@@ -7,6 +7,47 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CampusLearn_Web_App.styles.css" asp-append-version="true" />
+    <style>
+        /* === Profile Dropdown Styling === */
+        .profile-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-icon {
+            cursor: pointer;
+            font-size: 1.4rem;
+            user-select: none;
+        }
+
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #222;
+            min-width: 140px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            z-index: 999;
+            padding: 6px 0;
+        }
+
+        .profile-dropdown a {
+            display: block;
+            color: #fff;
+            padding: 10px 16px;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .profile-dropdown a:hover {
+            background-color: #444;
+        }
+
+        .profile-container.active .profile-dropdown {
+            display: block;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -31,10 +72,18 @@
 
             <div class="nav-right">
                 <span class="icon">🔔</span>
-                <span class="icon">👤</span>
+
+                <!-- Profile Dropdown -->
+                <div class="profile-container" id="profileMenu">
+                    <span class="icon profile-icon">👤</span>
+                    <div class="profile-dropdown">
+                        <a asp-page="/LoginPage">Logout</a>
+                    </div>
+                </div>
             </div>
         </nav>
     </header>
+
     <div class="container-fluid">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -56,32 +105,31 @@
             lastName = Context.Session.GetString("UserLastName")
         }));
         
-        // Log current page and user status
-        console.log("🎓 CampusLearn: Page rendered with user data");
+        console.log("🎓 CampusLearn: Admin Layout rendered with user data");
         console.log("👤 CampusLearn: Current user session:", window.campusLearnUser);
-        
-        // Database connection status from server
-        window.campusLearnConfig = {
-            databaseConnected: true, // This will be from server
-            domainValidation: "@@belgiumcampus.ac.za",
-            environment: "@(System.Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development")"
-        };
-        
-        console.log("⚙️ CampusLearn: Application config:", window.campusLearnConfig);
     </script>
-        <script>
+
+    <script>
+        // === Toggle Burger Menu ===
         const burger = document.getElementById('burgerMenu');
         const navLinks = document.querySelector('.nav-links');
-
         burger.addEventListener('click', () => {
             navLinks.classList.toggle('active');
             burger.classList.toggle('active');
         });
+
+        // === Toggle Profile Dropdown ===
+        const profileMenu = document.getElementById('profileMenu');
+        document.addEventListener('click', (event) => {
+            if (profileMenu.contains(event.target)) {
+                profileMenu.classList.toggle('active');
+            } else {
+                profileMenu.classList.remove('active');
+            }
+        });
     </script>
 
-    
     <script src="~/js/site.js" asp-append-version="true"></script>
-
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

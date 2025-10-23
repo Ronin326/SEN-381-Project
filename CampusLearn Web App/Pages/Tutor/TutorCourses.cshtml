@@ -13,36 +13,106 @@
         <button class="tab" id="mycourses-tab" onclick="switchTab('mycourses')">My Courses</button>
     </div>
 
+    <!-- Tutor Courses Tab -->
     <div class="tab-content active" id="tutor-content">
         <h2 class="tab-heading">Tutor Courses</h2>
-        <p>Here you can view all courses you’re tutoring.</p>
-        <!-- Example Tutor Course Cards -->
-        <div class="courses-grid">
-            <div class="course-card">
-                <h3>Advanced Programming</h3>
-                <p>Students: 18</p>
-            </div>
-            <div class="course-card">
-                <h3>Systems Analysis</h3>
-                <p>Students: 12</p>
-            </div>
+        <div class="action-bar">
+            <button class="btn-primary" id="openTutorModalBtn">Add Course</button>
         </div>
+        @if (Model.SubscribedTutorModules.Any())
+        {
+            <div class="module-grid">
+                @foreach (var module in Model.SubscribedTutorModules)
+                {
+                    <div class="course-card">
+                        <h3>@module.ModuleName</h3>
+                        <form method="post" asp-page-handler="Remove" style="margin-top:10px;">
+                            <input type="hidden" name="moduleId" value="@module.ModuleID" />
+                            <button type="submit" class="btn-unsubscribe-themed">Remove</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p>No courses added yet.</p>
+        }
     </div>
 
+    <!-- Student Courses Tab -->
     <div class="tab-content" id="mycourses-content">
         <h2 class="tab-heading">My Courses</h2>
-        <p>These are your enrolled courses.</p>
-        <!-- Example My Course Cards -->
-        <div class="courses-grid">
-            <div class="course-card">
-                <h3>Database Management</h3>
-                <p>Progress: 85%</p>
-            </div>
-            <div class="course-card">
-                <h3>AI & Machine Learning</h3>
-                <p>Progress: 40%</p>
-            </div>
+        <div class="action-bar">
+            <button class="btn-primary" id="openModalBtn">Subscribe to Course</button>
         </div>
+        @if (Model.SubscribedModules.Any())
+        {
+            <div class="module-grid">
+                @foreach (var module in Model.SubscribedModules)
+                {
+                    <div class="course-card">
+                        <h3>@module.ModuleName</h3>
+                        <form method="post" asp-page-handler="Unsubscribe" style="margin-top:10px;">
+                            <input type="hidden" name="moduleId" value="@module.ModuleID" />
+                            <button type="submit" class="btn-unsubscribe-themed">Unsubscribe</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p>No courses enrolled yet.</p>
+        }
+    </div>
+</div>
+
+<!-- Modal for Student Modules -->
+<div id="studentModuleModal" class="modal hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Available Modules</h3>
+            <button class="close-btn" id="closeStudentModalBtn">✖</button>
+        </div>
+        <ul class="available-modules">
+            @foreach (var module in Model.Modules)
+            {
+                <li class="module-item">
+                    <div class="module-info">
+                        <strong>@module.ModuleName</strong>
+                    </div>
+                    <form method="post" asp-page-handler="Subscribe" style="margin-top: 10px;">
+                        <input type="hidden" name="moduleId" value="@module.ModuleID" />
+                        <button type="submit" class="btn-subscribe">Subscribe</button>
+                    </form>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+<!-- Modal for Tutor Modules -->
+<div id="tutorModuleModal" class="modal hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Available Modules</h3>
+            <button class="close-btn" id="closeTutorModalBtn">✖</button>
+        </div>
+        <ul class="available-modules">
+            @foreach (var module in Model.Modules)
+            {
+                <li class="module-item">
+                    <div class="module-info">
+                        <strong>@module.ModuleName</strong>
+                    </div>
+                    <form method="post" asp-page-handler="Add" style="margin-top: 10px;">
+                        <input type="hidden" name="moduleId" value="@module.ModuleID" />
+                        <button type="submit" class="btn-subscribe">Add</button>
+                    </form>
+                </li>
+            }
+        </ul>
     </div>
 </div>
 
@@ -54,62 +124,42 @@
         document.getElementById(`${tab}-tab`).classList.add('active');
         document.getElementById(`${tab}-content`).classList.add('active');
     }
-</script>
 
+    // Student modal
+    const studentModal = document.getElementById("studentModuleModal");
+    const openModalBtn = document.getElementById("openModalBtn");
+    const closeStudentModalBtn = document.getElementById("closeStudentModalBtn");
 
+    openModalBtn.addEventListener("click", () => {
+        studentModal.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+    });
 
-<!-- 💬 Floating Chatbot Icon -->
-<div id="chatbot-icon" title="Chat with CampusLearn">
-    💬
-</div>
+    closeStudentModalBtn.addEventListener("click", () => {
+        studentModal.classList.add("hidden");
+        document.body.style.overflow = "auto";
+    });
 
-<!-- 🤖 Chatbot Panel -->
-<div id="chatbot-container" class="@(Model.IsChatOpen ? "" : "hidden")">
-    <div class="chat-header">
-        <h2>🤖 CampusLearn Chatbot</h2>
-        <span class="status-dot"></span>
-        <span>Online</span>
-        <button type="button" id="close-chat">✖</button>
-    </div>
+    // Tutor modal
+    const tutorModal = document.getElementById("tutorModuleModal");
+    const openTutorModalBtn = document.getElementById("openTutorModalBtn");
+    const closeTutorModalBtn = document.getElementById("closeTutorModalBtn");
 
-    <div id="chat-box" class="chat-box">
-        @foreach (var msg in Model.Messages)
-        {
-            <div class="chat-message @(msg.IsUser ? "user-msg" : "bot-msg")">
-                <div class="bubble">@msg.Content</div>
-            </div>
+    openTutorModalBtn.addEventListener("click", () => {
+        tutorModal.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+    });
+
+    closeTutorModalBtn.addEventListener("click", () => {
+        tutorModal.classList.add("hidden");
+        document.body.style.overflow = "auto";
+    });
+
+    window.addEventListener("click", (event) => {
+        if (event.target === studentModal || event.target === tutorModal) {
+            studentModal.classList.add("hidden");
+            tutorModal.classList.add("hidden");
+            document.body.style.overflow = "auto";
         }
-    </div>
-
-    <form method="post" class="chat-input">
-        <input type="hidden" id="chat-open-state" name="IsChatOpen" value="@Model.IsChatOpen" />
-        <input type="text" name="UserMessage" value="@Model.UserMessage" placeholder="Type a message..." autocomplete="off" />
-        <button type="submit" class="send-btn">➤</button>
-    </form>
-</div>
-
-<script>
-    const chatbotIcon = document.getElementById("chatbot-icon");
-    const chatbotContainer = document.getElementById("chatbot-container");
-    const closeChat = document.getElementById("close-chat");
-    const chatStateInput = document.getElementById("chat-open-state");
-    const chatBox = document.getElementById("chat-box");
-
-    // Toggle chat visibility
-    chatbotIcon.addEventListener("click", () => {
-        chatbotContainer.classList.remove("hidden");
-        chatbotIcon.style.display = "none";
-        chatStateInput.value = "true"; // persist state
     });
-
-    closeChat.addEventListener("click", () => {
-        chatbotContainer.classList.add("hidden");
-        chatbotIcon.style.display = "flex";
-        chatStateInput.value = "false"; // persist state
-    });
-
-    // Auto-scroll to latest message
-    if (chatBox) {
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
 </script>

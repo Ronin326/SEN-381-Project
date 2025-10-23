@@ -167,3 +167,43 @@ main, .page-content, .container, .content-wrapper {
         display: flex;
     }
 }
+
+/* === Profile Dropdown Styling === */
+.profile-container {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-icon {
+    cursor: pointer;
+    font-size: 1.4rem;
+    user-select: none;
+}
+
+.profile-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #222;
+    min-width: 140px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    z-index: 999;
+    padding: 6px 0;
+}
+
+    .profile-dropdown a {
+        display: block;
+        color: #fff;
+        padding: 10px 16px;
+        text-decoration: none;
+        transition: background 0.2s;
+    }
+
+        .profile-dropdown a:hover {
+            background-color: #444;
+        }
+
+.profile-container.active .profile-dropdown {
+    display: block;
+}

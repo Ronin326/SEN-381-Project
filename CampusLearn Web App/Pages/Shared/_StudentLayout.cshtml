@@ -30,10 +30,17 @@
 
             <div class="nav-right">
                 <span class="icon">🔔</span>
-                <span class="icon">👤</span>
+
+                <div class="profile-container" id="profileMenu">
+                    <span class="icon profile-icon">👤</span>
+                    <div class="profile-dropdown">
+                        <a asp-page="/LoginPage">Logout</a>
+                    </div>
+                </div>
             </div>
         </nav>
     </header>
+
     <div class="container-fluid">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -42,45 +49,28 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    
-    @* CampusLearn User Session Information for Console Logging *@
+
     <script>
-        // Expose user session data to browser console
-        window.campusLearnUser = @Html.Raw(Json.Serialize(new {
-            isAuthenticated = Context.Session.GetString("UserId") != null,
-            userId = Context.Session.GetString("UserId"),
-            email = Context.Session.GetString("UserEmail"),
-            role = Context.Session.GetString("UserRole"),
-            firstName = Context.Session.GetString("UserFirstName"),
-            lastName = Context.Session.GetString("UserLastName")
-        }));
-        
-        // Log current page and user status
-        console.log("🎓 CampusLearn: Page rendered with user data");
-        console.log("👤 CampusLearn: Current user session:", window.campusLearnUser);
-        
-        // Database connection status from server
-        window.campusLearnConfig = {
-            databaseConnected: true, // This will be from server
-            domainValidation: "@@belgiumcampus.ac.za",
-            environment: "@(System.Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development")"
-        };
-        
-        console.log("⚙️ CampusLearn: Application config:", window.campusLearnConfig);
-    </script>
-        <script>
+        // === Toggle Burger Menu ===
         const burger = document.getElementById('burgerMenu');
         const navLinks = document.querySelector('.nav-links');
-
         burger.addEventListener('click', () => {
             navLinks.classList.toggle('active');
             burger.classList.toggle('active');
         });
+
+        // === Toggle Profile Dropdown ===
+        const profileMenu = document.getElementById('profileMenu');
+        document.addEventListener('click', (event) => {
+            if (profileMenu.contains(event.target)) {
+                profileMenu.classList.toggle('active');
+            } else {
+                profileMenu.classList.remove('active');
+            }
+        });
     </script>
 
-    
     <script src="~/js/site.js" asp-append-version="true"></script>
-
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

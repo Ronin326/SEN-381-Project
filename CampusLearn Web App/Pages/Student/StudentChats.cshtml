@@ -11,31 +11,160 @@
     <!-- Left: Contacts List -->
     <div class="chat-sidebar">
         <h3>Chats</h3>
-        <ul>
-            <li class="active">Tutor John</li>
-            <li>Support</li>
-            <li>Study Group</li>
+        <button id="newChatBtn" type="button">+ New Chat</button>
+        <ul id="chatList">
+            <!-- dynamically filled -->
         </ul>
+    </div>
+
+    <!-- Modal for selecting a user -->
+    <div id="newChatModal" class="modal">
+        <div class="modal-content">
+            <span id="closeModal" class="close">&times;</span>
+            <h3>Select a user to start a chat</h3>
+            <input type="text" id="userSearch" placeholder="Search users..." />
+            <ul id="userList"></ul>
+            <div id="noUsers" style="display:none;">No users found.</div>
+        </div>
     </div>
 
     <!-- Right: Chat Window -->
     <div class="chat-main">
         <div class="chat-header">
-            <h3>Tutor John</h3>
+            <h3 id="chatHeaderName">Select a chat</h3>
         </div>
 
-        <div class="chat-messages">
-            <div class="message received">
-                <p>Hey! How’s your assignment going?</p>
-            </div>
-            <div class="message sent">
-                <p>Almost done, just fixing a few errors!</p>
-            </div>
+        <div class="chat-messages" id="chatMessages">
+            <!-- dynamically loaded messages -->
         </div>
 
         <div class="chat-input">
-            <input type="text" placeholder="Type a message..." />
-            <button>Send</button>
+            <input id="messageInput" type="text" placeholder="Type a message..." />
+            <button id="sendMessageBtn">Send</button>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        const newChatBtn = document.getElementById("newChatBtn");
+        const modal = document.getElementById("newChatModal");
+        const closeModal = document.getElementById("closeModal");
+        const userList = document.getElementById("userList");
+        const userSearch = document.getElementById("userSearch");
+        const chatSidebar = document.getElementById("chatList");
+        const chatHeader = document.getElementById("chatHeaderName");
+        const chatMessages = document.getElementById("chatMessages");
+        const sendMessageBtn = document.getElementById("sendMessageBtn");
+        const messageInput = document.getElementById("messageInput");
+
+        let allUsers = [];
+        let currentReceiverId = null;
+        const currentUserId = window.campusLearnUser?.userId ?? 1;
+
+        // --- Load users from DB ---
+        async function fetchUsers() {
+            const res = await fetch("/Student/Chats?handler=Users");
+            if (!res.ok) return;
+            allUsers = await res.json();
+        }
+
+        // --- Open/Close Modal ---
+        newChatBtn.addEventListener("click", async () => {
+            await fetchUsers();
+            renderUserList(allUsers);
+            modal.style.display = "flex";
+        });
+
+        closeModal.addEventListener("click", () => modal.style.display = "none");
+        window.addEventListener("click", e => { if (e.target === modal) modal.style.display = "none"; });
+
+        // --- Search users ---
+        userSearch.addEventListener("input", () => {
+            const q = userSearch.value.trim().toLowerCase();
+            const filtered = !q ? allUsers : allUsers.filter(u => u.fullName.toLowerCase().includes(q));
+            renderUserList(filtered);
+        });
+
+        function renderUserList(users) {
+            userList.innerHTML = "";
+            if (!users.length) {
+                document.getElementById("noUsers").style.display = "block";
+                return;
+            }
+            document.getElementById("noUsers").style.display = "none";
+            users.forEach(u => {
+                const li = document.createElement("li");
+                li.textContent = u.fullName;
+                li.dataset.userId = u.userId;
+                li.addEventListener("click", () => selectUser(u));
+                userList.appendChild(li);
+            });
+        }
+
+        // --- Select user and create chat ---
+        function selectUser(user) {
+            modal.style.display = "none";
+            const existing = chatSidebar.querySelector(`li[data-user-id="${user.userId}"]`);
+            if (!existing) {
+                const li = document.createElement("li");
+                li.textContent = user.fullName;
+                li.dataset.userId = user.userId;
+                li.addEventListener("click", () => setActiveChat(li, user.userId, user.fullName));
+                chatSidebar.appendChild(li);
+            }
+            setActiveChat(existing || chatSidebar.lastChild, user.userId, user.fullName);
+        }
+
+        function setActiveChat(li, receiverId, name) {
+            chatSidebar.querySelectorAll("li").forEach(n => n.classList.remove("active"));
+            li.classList.add("active");
+            chatHeader.textContent = name;
+            currentReceiverId = receiverId;
+            loadMessages(receiverId);
+        }
+
+        // --- Load chat messages from DB ---
+        async function loadMessages(receiverId) {
+            chatMessages.innerHTML = "<p>Loading...</p>";
+            const res = await fetch(`/api/messages/${currentUserId}/${receiverId}`);
+            if (!res.ok) {
+                chatMessages.innerHTML = "<p>Failed to load messages</p>";
+                return;
+            }
+            const messages = await res.json();
+            chatMessages.innerHTML = "";
+            messages.forEach(m => {
+                const msgDiv = document.createElement("div");
+                msgDiv.className = "message " + (m.senderID === currentUserId ? "sent" : "received");
+                msgDiv.innerHTML = `<p>${m.content}</p>`;
+                chatMessages.appendChild(msgDiv);
+            });
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // --- Send message ---
+        sendMessageBtn.addEventListener("click", async () => {
+            if (!currentReceiverId) return alert("Select a chat first!");
+            const content = messageInput.value.trim();
+            if (!content) return;
+
+            const res = await fetch("/api/messages/send", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    senderID: currentUserId,
+                    receiverID: currentReceiverId,
+                    content
+                })
+            });
+
+            if (res.ok) {
+                messageInput.value = "";
+                loadMessages(currentReceiverId);
+            } else {
+                alert("Failed to send message.");
+            }
+        });
+    </script>
+}

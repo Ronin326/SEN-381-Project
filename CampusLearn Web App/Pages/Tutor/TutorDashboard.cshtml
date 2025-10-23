@@ -8,9 +8,10 @@
 <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
 
 <h1>Welcome to the Campus Learn Platform</h1>
+
+<!-- Notifications Section -->
 <div class="DashboardDiv" id="NotificationsDiv">
     <h2 id="DashboardDivHeadings">Notifications</h2>
-
     <ul class="notification-list">
         <li class="notification-item">
             <div class="notification-date">Oct 23, 2025</div>
@@ -39,42 +40,55 @@
     </ul>
 </div>
 
+<!-- Courses Section -->
 <div class="course-tabs-container">
     <div class="tabs">
         <button class="tab active" id="tutor-tab" onclick="switchTab('tutor')">Tutor Courses</button>
         <button class="tab" id="mycourses-tab" onclick="switchTab('mycourses')">My Courses</button>
     </div>
 
+    <!-- Tutor Courses -->
     <div class="tab-content active" id="tutor-content">
         <h2 class="tab-heading">Tutor Courses</h2>
-        <p>Here you can view all courses you’re tutoring.</p>
-        <!-- Example Tutor Course Cards -->
-        <div class="courses-grid">
-            <div class="course-card">
-                <h3>Advanced Programming</h3>
-                <p>Students: 18</p>
-            </div>
-            <div class="course-card">
-                <h3>Systems Analysis</h3>
-                <p>Students: 12</p>
-            </div>
-        </div>
+        <p>You are currently teaching @Model.SubscribedTutorModules.Count module(s):</p>
+
+        @if (Model.SubscribedTutorModules.Any())
+        {
+            <ul class="student-modules-list">
+                @foreach (var module in Model.SubscribedTutorModules)
+                {
+                    <li class="module-item">
+                        <strong>@module.ModuleName</strong> - @module.ModuleCode
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>No tutor modules found.</p>
+        }
     </div>
 
+    <!-- My Courses -->
     <div class="tab-content" id="mycourses-content">
         <h2 class="tab-heading">My Courses</h2>
-        <p>These are your enrolled courses.</p>
-        <!-- Example My Course Cards -->
-        <div class="courses-grid">
-            <div class="course-card">
-                <h3>Database Management</h3>
-                <p>Progress: 85%</p>
-            </div>
-            <div class="course-card">
-                <h3>AI & Machine Learning</h3>
-                <p>Progress: 40%</p>
-            </div>
-        </div>
+        <p>You are currently enrolled in @Model.StudentModules.Count module(s):</p>
+
+        @if (Model.StudentModules.Any())
+        {
+            <ul class="student-modules-list">
+                @foreach (var sm in Model.StudentModules)
+                {
+                    <li class="module-item">
+                        <strong>@sm.Module.ModuleName</strong> - @sm.Module.ModuleCode
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>No enrolled courses found.</p>
+        }
     </div>
 </div>
 
@@ -87,7 +101,6 @@
         document.getElementById(`${tab}-content`).classList.add('active');
     }
 </script>
-
 
 <!-- 💬 Floating Chatbot Icon -->
 <div id="chatbot-icon" title="Chat with CampusLearn">
@@ -126,20 +139,18 @@
     const chatStateInput = document.getElementById("chat-open-state");
     const chatBox = document.getElementById("chat-box");
 
-    // Toggle chat visibility
     chatbotIcon.addEventListener("click", () => {
         chatbotContainer.classList.remove("hidden");
         chatbotIcon.style.display = "none";
-        chatStateInput.value = "true"; // persist state
+        chatStateInput.value = "true";
     });
 
     closeChat.addEventListener("click", () => {
         chatbotContainer.classList.add("hidden");
         chatbotIcon.style.display = "flex";
-        chatStateInput.value = "false"; // persist state
+        chatStateInput.value = "false";
     });
 
-    // Auto-scroll to latest message
     if (chatBox) {
         chatBox.scrollTop = chatBox.scrollHeight;
     }
