@@ -8,7 +8,7 @@ $pgBinPath = "C:\Program Files\PostgreSQL\18\bin"
 $dataPath = "C:\Program Files\PostgreSQL\18\data"
 $logPath = "$env:USERPROFILE\PostgreSQL\logfile"
 $pgUser = "postgres"
-$pgPassword = "Nattas123"  # change this if your password differs
+$pgPassword = "password"  # change this if your password differs
 $dbName = "campuslearn"
 
 
