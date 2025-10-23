@@ -8,62 +8,78 @@
 <link rel="stylesheet" href="~/css/courses.css" asp-append-version="true" />
 
 <h2>My Courses</h2>
+
+<div class="action-bar">
+    <button class="btn-primary" id="openModalBtn">Subscribe to Course</button>
+</div>
+
 <div class="CourseContainer">
-    No courses enrolled yet.
+    @if (Model.SubscribedModules.Any())
+    {
+        <div class="module-grid">
+            @foreach (var module in Model.SubscribedModules)
+            {
+                <div class="course-card">
+                    <h3>@module.ModuleName</h3>
+
+                    <form method="post" asp-page-handler="Unsubscribe" style="margin-top:10px;">
+                        <input type="hidden" name="moduleId" value="@module.ModuleID" />
+                        <button type="submit" class="btn-unsubscribe-themed">Unsubscribe</button>
+                    </form>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>No courses enrolled yet.</p>
+    }
 </div>
 
-<!-- 💬 Floating Chatbot Icon -->
-<div id="chatbot-icon" title="Chat with CampusLearn">
-    💬
-</div>
+<!-- 📘 MODAL FOR AVAILABLE MODULES -->
+<div id="moduleModal" class="modal hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 style="color:#00afd6; text-shadow:0 0 8px rgba(0,175,214,0.5);">Available Modules</h3>
+            <button class="close-btn" id="closeModalBtn">✖</button>
+        </div>
+        <ul class="available-modules">
+            @foreach (var module in Model.Modules)
+            {
+                <li class="module-item">
+                    <div class="module-info">
+                        <strong>@module.ModuleName</strong>
+                    </div>
 
-<!-- 🤖 Chatbot Panel -->
-<div id="chatbot-container" class="@(Model.IsChatOpen ? "" : "hidden")">
-    <div class="chat-header">
-        <h2>🤖 CampusLearn Chatbot</h2>
-        <span class="status-dot"></span>
-        <span>Online</span>
-        <button type="button" id="close-chat">✖</button>
+                    <form method="post" asp-page-handler="Subscribe" style="margin-top: 10px;">
+                        <input type="hidden" name="moduleId" value="@module.ModuleID" />
+                        <button type="submit" class="btn-subscribe">Subscribe</button>
+                    </form>
+                </li>
+            }
+        </ul>
     </div>
-
-    <div id="chat-box" class="chat-box">
-        @foreach (var msg in Model.Messages)
-        {
-            <div class="chat-message @(msg.IsUser ? "user-msg" : "bot-msg")">
-                <div class="bubble">@msg.Content</div>
-            </div>
-        }
-    </div>
-
-    <form method="post" class="chat-input">
-        <input type="hidden" id="chat-open-state" name="IsChatOpen" value="@Model.IsChatOpen" />
-        <input type="text" name="UserMessage" value="@Model.UserMessage" placeholder="Type a message..." autocomplete="off" />
-        <button type="submit" class="send-btn">➤</button>
-    </form>
 </div>
 
 <script>
-    const chatbotIcon = document.getElementById("chatbot-icon");
-    const chatbotContainer = document.getElementById("chatbot-container");
-    const closeChat = document.getElementById("close-chat");
-    const chatStateInput = document.getElementById("chat-open-state");
-    const chatBox = document.getElementById("chat-box");
+    const modal = document.getElementById("moduleModal");
+    const openModalBtn = document.getElementById("openModalBtn");
+    const closeModalBtn = document.getElementById("closeModalBtn");
 
-    // Toggle chat visibility
-    chatbotIcon.addEventListener("click", () => {
-        chatbotContainer.classList.remove("hidden");
-        chatbotIcon.style.display = "none";
-        chatStateInput.value = "true"; // persist state
+    openModalBtn.addEventListener("click", () => {
+        modal.classList.remove("hidden");
+        document.body.style.overflow = "hidden"; // prevent background scroll
     });
 
-    closeChat.addEventListener("click", () => {
-        chatbotContainer.classList.add("hidden");
-        chatbotIcon.style.display = "flex";
-        chatStateInput.value = "false"; // persist state
+    closeModalBtn.addEventListener("click", () => {
+        modal.classList.add("hidden");
+        document.body.style.overflow = "auto";
     });
 
-    // Auto-scroll to latest message
-    if (chatBox) {
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
+    window.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            modal.classList.add("hidden");
+            document.body.style.overflow = "auto";
+        }
+    });
 </script>

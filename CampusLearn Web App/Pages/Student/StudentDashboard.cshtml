@@ -14,7 +14,24 @@
 </div>
 <div class="DashboardDiv" id="StudentModulesDiv">
     <h2 id="DashboardDivHeadings">Your Modules</h2>
-    <p>You are currently enrolled in the following modules:</p>
+
+    <p>You are currently enrolled in @Model.StudentModules.Count modules:</p>
+
+    @if (Model.StudentModules.Any())
+    {
+        <ul class="student-modules-list">
+            @foreach (var sm in Model.StudentModules)
+            {
+                <li class="module-item">
+                    <strong>@sm.Module.ModuleName</strong> - @sm.Module.ModuleCode
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>You are not enrolled in any modules yet.</p>
+    }
 </div>
 
 <!-- 💬 Floating Chatbot Icon -->

@@ -452,3 +452,66 @@ h1 {
         font-size: 1.6rem;
     }
 }
+
+.notification-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.notification-item {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    transition: background 0.3s ease;
+}
+
+    .notification-item:hover {
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+.notification-date {
+    font-size: 0.85em;
+    color: #aaa;
+    margin-bottom: 4px;
+}
+
+.notification-message {
+    font-size: 1em;
+    color: #e5e5e5;
+}
+
+.student-modules-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.module-item {
+    background: linear-gradient(135deg, rgba(0, 175, 214, 0.2), rgba(229, 2, 126, 0.2));
+    border: 1px solid rgba(0, 175, 214, 0.3);
+    padding: 15px;
+    border-radius: 10px;
+    color: #e5e5e5;
+    flex: 1 1 200px;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: transform 0.2s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+    .module-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(229, 2, 126, 0.4);
+        border-color: #e5027e;
+    }
+
+    .module-item strong {
+        display: block;
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+        color: #00afd6;
+        text-shadow: 0 0 8px rgba(0, 175, 214, 0.5);
+    }
