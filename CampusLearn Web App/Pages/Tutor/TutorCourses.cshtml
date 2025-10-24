@@ -1,0 +1,165 @@
+﻿@page
+@model CampusLearn_Web_App.Pages.Tutor.TutorCoursesModel
+@{
+    ViewData["Title"] = "Tutor Courses";
+    Layout = "/Pages/Shared/_TutorLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/courses.css" asp-append-version="true" />
+
+<div class="course-tabs-container">
+    <div class="tabs">
+        <button class="tab active" id="tutor-tab" onclick="switchTab('tutor')">Tutor Courses</button>
+        <button class="tab" id="mycourses-tab" onclick="switchTab('mycourses')">My Courses</button>
+    </div>
+
+    <!-- Tutor Courses Tab -->
+    <div class="tab-content active" id="tutor-content">
+        <h2 class="tab-heading">Tutor Courses</h2>
+        <div class="action-bar">
+            <button class="btn-primary" id="openTutorModalBtn">Add Course</button>
+        </div>
+        @if (Model.SubscribedTutorModules.Any())
+        {
+            <div class="module-grid">
+                @foreach (var module in Model.SubscribedTutorModules)
+                {
+                    <div class="course-card">
+                        <h3>@module.ModuleName</h3>
+                        <form method="post" asp-page-handler="Remove" style="margin-top:10px;">
+                            <input type="hidden" name="moduleId" value="@module.ModuleID" />
+                            <button type="submit" class="btn-unsubscribe-themed">Remove</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p>No courses added yet.</p>
+        }
+    </div>
+
+    <!-- Student Courses Tab -->
+    <div class="tab-content" id="mycourses-content">
+        <h2 class="tab-heading">My Courses</h2>
+        <div class="action-bar">
+            <button class="btn-primary" id="openModalBtn">Subscribe to Course</button>
+        </div>
+        @if (Model.SubscribedModules.Any())
+        {
+            <div class="module-grid">
+                @foreach (var module in Model.SubscribedModules)
+                {
+                    <div class="course-card">
+                        <h3>@module.ModuleName</h3>
+                        <form method="post" asp-page-handler="Unsubscribe" style="margin-top:10px;">
+                            <input type="hidden" name="moduleId" value="@module.ModuleID" />
+                            <button type="submit" class="btn-unsubscribe-themed">Unsubscribe</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p>No courses enrolled yet.</p>
+        }
+    </div>
+</div>
+
+<!-- Modal for Student Modules -->
+<div id="studentModuleModal" class="modal hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Available Modules</h3>
+            <button class="close-btn" id="closeStudentModalBtn">✖</button>
+        </div>
+        <ul class="available-modules">
+            @foreach (var module in Model.Modules)
+            {
+                <li class="module-item">
+                    <div class="module-info">
+                        <strong>@module.ModuleName</strong>
+                    </div>
+                    <form method="post" asp-page-handler="Subscribe" style="margin-top: 10px;">
+                        <input type="hidden" name="moduleId" value="@module.ModuleID" />
+                        <button type="submit" class="btn-subscribe">Subscribe</button>
+                    </form>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+<!-- Modal for Tutor Modules -->
+<div id="tutorModuleModal" class="modal hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Available Modules</h3>
+            <button class="close-btn" id="closeTutorModalBtn">✖</button>
+        </div>
+        <ul class="available-modules">
+            @foreach (var module in Model.Modules)
+            {
+                <li class="module-item">
+                    <div class="module-info">
+                        <strong>@module.ModuleName</strong>
+                    </div>
+                    <form method="post" asp-page-handler="Add" style="margin-top: 10px;">
+                        <input type="hidden" name="moduleId" value="@module.ModuleID" />
+                        <button type="submit" class="btn-subscribe">Add</button>
+                    </form>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+<script>
+    function switchTab(tab) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+        document.getElementById(`${tab}-tab`).classList.add('active');
+        document.getElementById(`${tab}-content`).classList.add('active');
+    }
+
+    // Student modal
+    const studentModal = document.getElementById("studentModuleModal");
+    const openModalBtn = document.getElementById("openModalBtn");
+    const closeStudentModalBtn = document.getElementById("closeStudentModalBtn");
+
+    openModalBtn.addEventListener("click", () => {
+        studentModal.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+    });
+
+    closeStudentModalBtn.addEventListener("click", () => {
+        studentModal.classList.add("hidden");
+        document.body.style.overflow = "auto";
+    });
+
+    // Tutor modal
+    const tutorModal = document.getElementById("tutorModuleModal");
+    const openTutorModalBtn = document.getElementById("openTutorModalBtn");
+    const closeTutorModalBtn = document.getElementById("closeTutorModalBtn");
+
+    openTutorModalBtn.addEventListener("click", () => {
+        tutorModal.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+    });
+
+    closeTutorModalBtn.addEventListener("click", () => {
+        tutorModal.classList.add("hidden");
+        document.body.style.overflow = "auto";
+    });
+
+    window.addEventListener("click", (event) => {
+        if (event.target === studentModal || event.target === tutorModal) {
+            studentModal.classList.add("hidden");
+            tutorModal.classList.add("hidden");
+            document.body.style.overflow = "auto";
+        }
+    });
+</script>

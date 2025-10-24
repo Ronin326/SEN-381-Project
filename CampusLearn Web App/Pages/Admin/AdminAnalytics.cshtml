@@ -1,0 +1,32 @@
+﻿@page
+@model CampusLearn_Web_App.Pages.Admin.AdminAnalyticsModel
+@{
+    ViewData["Title"] = "Analytics";
+    Layout = "_AdminLayout";
+}
+
+<link rel="stylesheet" href="~/css/analytics.css" asp-append-version="true" />
+
+<div class="admin-container">
+    <h1 class="page-title">Analytics & Reports</h1>
+
+    <div class="dashboard-grid">
+        <div class="widget">
+            <h3>User Growth</h3>
+            <div class="chart-placeholder"><img src="~/images/UserGrowthImage.png" alt="User Growth Chart" /></div>
+        </div>
+
+        <div class="widget">
+            <h3>Engagement</h3>
+            <div class="chart-placeholder"><img src="~/images/EngagementGraphImage.png" alt="Engagement Chart" /></div>
+        </div>
+
+        <div class="widget">
+            <h3>Content Popularity</h3>
+            <ul>
+                <li>Top Shared Document: <strong>“C# Advanced Concepts.pdf”</strong></li>
+                <li>Most Active Forum: <strong>“Programming 2X1 Help”</strong></li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,157 @@
+﻿@page
+@model CampusLearn_Web_App.Pages.Tutor.TutorDashboardModel
+@{
+    ViewData["Title"] = "Tutor Dashboard";
+    Layout = "/Pages/Shared/_TutorLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+
+<h1>Welcome to the Campus Learn Platform</h1>
+
+<!-- Notifications Section -->
+<div class="DashboardDiv" id="NotificationsDiv">
+    <h2 id="DashboardDivHeadings">Notifications</h2>
+    <ul class="notification-list">
+        <li class="notification-item">
+            <div class="notification-date">Oct 23, 2025</div>
+            <div class="notification-message">
+                <strong>New Submission:</strong> Student John Doe submitted "Math 101" assignment.
+            </div>
+        </li>
+        <li class="notification-item">
+            <div class="notification-date">Oct 22, 2025</div>
+            <div class="notification-message">
+                <strong>Message:</strong> Student Jane Smith sent you a question regarding "History 202".
+            </div>
+        </li>
+        <li class="notification-item">
+            <div class="notification-date">Oct 21, 2025</div>
+            <div class="notification-message">
+                <strong>Course Update:</strong> "Physics 101" lecture schedule has been changed.
+            </div>
+        </li>
+        <li class="notification-item">
+            <div class="notification-date">Oct 20, 2025</div>
+            <div class="notification-message">
+                <strong>Reminder:</strong> Grade submissions for "Chemistry Lab" are due tomorrow.
+            </div>
+        </li>
+    </ul>
+</div>
+
+<!-- Courses Section -->
+<div class="course-tabs-container">
+    <div class="tabs">
+        <button class="tab active" id="tutor-tab" onclick="switchTab('tutor')">Tutor Courses</button>
+        <button class="tab" id="mycourses-tab" onclick="switchTab('mycourses')">My Courses</button>
+    </div>
+
+    <!-- Tutor Courses -->
+    <div class="tab-content active" id="tutor-content">
+        <h2 class="tab-heading">Tutor Courses</h2>
+        <p>You are currently teaching @Model.SubscribedTutorModules.Count module(s):</p>
+
+        @if (Model.SubscribedTutorModules.Any())
+        {
+            <ul class="student-modules-list">
+                @foreach (var module in Model.SubscribedTutorModules)
+                {
+                    <li class="module-item">
+                        <strong>@module.ModuleName</strong> - @module.ModuleCode
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>No tutor modules found.</p>
+        }
+    </div>
+
+    <!-- My Courses -->
+    <div class="tab-content" id="mycourses-content">
+        <h2 class="tab-heading">My Courses</h2>
+        <p>You are currently enrolled in @Model.StudentModules.Count module(s):</p>
+
+        @if (Model.StudentModules.Any())
+        {
+            <ul class="student-modules-list">
+                @foreach (var sm in Model.StudentModules)
+                {
+                    <li class="module-item">
+                        <strong>@sm.Module.ModuleName</strong> - @sm.Module.ModuleCode
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>No enrolled courses found.</p>
+        }
+    </div>
+</div>
+
+<script>
+    function switchTab(tab) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+        document.getElementById(`${tab}-tab`).classList.add('active');
+        document.getElementById(`${tab}-content`).classList.add('active');
+    }
+</script>
+
+<!-- 💬 Floating Chatbot Icon -->
+<div id="chatbot-icon" title="Chat with CampusLearn">
+    💬
+</div>
+
+<!-- 🤖 Chatbot Panel -->
+<div id="chatbot-container" class="@(Model.IsChatOpen ? "" : "hidden")">
+    <div class="chat-header">
+        <h2>🤖 CampusLearn Chatbot</h2>
+        <span class="status-dot"></span>
+        <span>Online</span>
+        <button type="button" id="close-chat">✖</button>
+    </div>
+
+    <div id="chat-box" class="chat-box">
+        @foreach (var msg in Model.Messages)
+        {
+            <div class="chat-message @(msg.IsUser ? "user-msg" : "bot-msg")">
+                <div class="bubble">@msg.Content</div>
+            </div>
+        }
+    </div>
+
+    <form method="post" class="chat-input">
+        <input type="hidden" id="chat-open-state" name="IsChatOpen" value="@Model.IsChatOpen" />
+        <input type="text" name="UserMessage" value="@Model.UserMessage" placeholder="Type a message..." autocomplete="off" />
+        <button type="submit" class="send-btn">➤</button>
+    </form>
+</div>
+
+<script>
+    const chatbotIcon = document.getElementById("chatbot-icon");
+    const chatbotContainer = document.getElementById("chatbot-container");
+    const closeChat = document.getElementById("close-chat");
+    const chatStateInput = document.getElementById("chat-open-state");
+    const chatBox = document.getElementById("chat-box");
+
+    chatbotIcon.addEventListener("click", () => {
+        chatbotContainer.classList.remove("hidden");
+        chatbotIcon.style.display = "none";
+        chatStateInput.value = "true";
+    });
+
+    closeChat.addEventListener("click", () => {
+        chatbotContainer.classList.add("hidden");
+        chatbotIcon.style.display = "flex";
+        chatStateInput.value = "false";
+    });
+
+    if (chatBox) {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+</script>

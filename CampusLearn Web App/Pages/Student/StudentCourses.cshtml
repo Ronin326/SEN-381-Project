@@ -1,0 +1,85 @@
+﻿@page
+@model CampusLearn_Web_App.Pages.Student.MyCoursesModel
+@{
+    ViewData["Title"] = "Student Courses";
+    Layout = "/Pages/Shared/_StudentLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/courses.css" asp-append-version="true" />
+
+<h2>My Courses</h2>
+
+<div class="action-bar">
+    <button class="btn-primary" id="openModalBtn">Subscribe to Course</button>
+</div>
+
+<div class="CourseContainer">
+    @if (Model.SubscribedModules.Any())
+    {
+        <div class="module-grid">
+            @foreach (var module in Model.SubscribedModules)
+            {
+                <div class="course-card">
+                    <h3>@module.ModuleName</h3>
+
+                    <form method="post" asp-page-handler="Unsubscribe" style="margin-top:10px;">
+                        <input type="hidden" name="moduleId" value="@module.ModuleID" />
+                        <button type="submit" class="btn-unsubscribe-themed">Unsubscribe</button>
+                    </form>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>No courses enrolled yet.</p>
+    }
+</div>
+
+<!-- 📘 MODAL FOR AVAILABLE MODULES -->
+<div id="moduleModal" class="modal hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 style="color:#00afd6; text-shadow:0 0 8px rgba(0,175,214,0.5);">Available Modules</h3>
+            <button class="close-btn" id="closeModalBtn">✖</button>
+        </div>
+        <ul class="available-modules">
+            @foreach (var module in Model.Modules)
+            {
+                <li class="module-item">
+                    <div class="module-info">
+                        <strong>@module.ModuleName</strong>
+                    </div>
+
+                    <form method="post" asp-page-handler="Subscribe" style="margin-top: 10px;">
+                        <input type="hidden" name="moduleId" value="@module.ModuleID" />
+                        <button type="submit" class="btn-subscribe">Subscribe</button>
+                    </form>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+<script>
+    const modal = document.getElementById("moduleModal");
+    const openModalBtn = document.getElementById("openModalBtn");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+
+    openModalBtn.addEventListener("click", () => {
+        modal.classList.remove("hidden");
+        document.body.style.overflow = "hidden"; // prevent background scroll
+    });
+
+    closeModalBtn.addEventListener("click", () => {
+        modal.classList.add("hidden");
+        document.body.style.overflow = "auto";
+    });
+
+    window.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            modal.classList.add("hidden");
+            document.body.style.overflow = "auto";
+        }
+    });
+</script>

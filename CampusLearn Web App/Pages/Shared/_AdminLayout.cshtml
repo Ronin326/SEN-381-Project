@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CampusLearn_Web_App</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/CampusLearn_Web_App.styles.css" asp-append-version="true" />
+    <style>
+        /* === Profile Dropdown Styling === */
+        .profile-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-icon {
+            cursor: pointer;
+            font-size: 1.4rem;
+            user-select: none;
+        }
+
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #222;
+            min-width: 140px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            z-index: 999;
+            padding: 6px 0;
+        }
+
+        .profile-dropdown a {
+            display: block;
+            color: #fff;
+            padding: 10px 16px;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .profile-dropdown a:hover {
+            background-color: #444;
+        }
+
+        .profile-container.active .profile-dropdown {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav id="mainNav">
+            <div class="nav-left">
+                <a id="logo" asp-area="" asp-page="/Index">CampusLearn</a>
+                <ul class="nav-links">
+                    <li><a asp-page="../Admin/AdminDashboard">Dashboard</a></li>
+                    <li><a asp-page="../Admin/Admin_Users">User Management</a></li>
+                    <li><a asp-page="../Admin/Admin_Courses">Courses Management</a></li>
+                    <li><a asp-page="../Admin/AdminModeration">Moderation</a></li>
+                    <li><a asp-page="../Admin/AdminAnalytics">Analytics</a></li>
+                </ul>
+
+                <!-- BURGER MENU -->
+                <div class="burger" id="burgerMenu">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+
+            <div class="nav-right">
+                <span class="icon">🔔</span>
+
+                <!-- Profile Dropdown -->
+                <div class="profile-container" id="profileMenu">
+                    <span class="icon profile-icon">👤</span>
+                    <div class="profile-dropdown">
+                        <a asp-page="/LoginPage">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-fluid">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    
+    @* CampusLearn User Session Information for Console Logging *@
+    <script>
+        // Expose user session data to browser console
+        window.campusLearnUser = @Html.Raw(Json.Serialize(new {
+            isAuthenticated = Context.Session.GetString("UserId") != null,
+            userId = Context.Session.GetString("UserId"),
+            email = Context.Session.GetString("UserEmail"),
+            role = Context.Session.GetString("UserRole"),
+            firstName = Context.Session.GetString("UserFirstName"),
+            lastName = Context.Session.GetString("UserLastName")
+        }));
+        
+        console.log("🎓 CampusLearn: Admin Layout rendered with user data");
+        console.log("👤 CampusLearn: Current user session:", window.campusLearnUser);
+    </script>
+
+    <script>
+        // === Toggle Burger Menu ===
+        const burger = document.getElementById('burgerMenu');
+        const navLinks = document.querySelector('.nav-links');
+        burger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            burger.classList.toggle('active');
+        });
+
+        // === Toggle Profile Dropdown ===
+        const profileMenu = document.getElementById('profileMenu');
+        document.addEventListener('click', (event) => {
+            if (profileMenu.contains(event.target)) {
+                profileMenu.classList.toggle('active');
+            } else {
+                profileMenu.classList.remove('active');
+            }
+        });
+    </script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

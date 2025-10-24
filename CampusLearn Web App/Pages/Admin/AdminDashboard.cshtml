@@ -1,0 +1,48 @@
+﻿@page
+@model CampusLearn_Web_App.Pages.Admin.AdminDashboardModel
+@{
+    ViewData["Title"] = "Amdin Dashboard";
+    Layout = "_AdminLayout";
+}
+
+<link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+
+<div class="admin-container">
+    <h1 class="page-title">Admin Dashboard</h1>
+
+    <div class="dashboard-grid">
+        <div class="widget">
+            <h3>User Summary</h3>
+            <p>Total Students: <strong>1,240</strong></p>
+            <p>Total Tutors: <strong>85</strong></p>
+            <p>New Registrations Today: <strong>12</strong></p>
+        </div>
+
+        <div class="widget">
+            <h3>Forum Activity</h3>
+            <div class="chart-placeholder"><img src="~/images/FormActivityImage.png" alt="Form Activity Graph" /></div>
+        </div>
+
+        <div class="widget">
+            <h3>Content Uploads</h3>
+            <p>New uploads this week: <strong>43</strong></p>
+        </div>
+
+        <div class="widget">
+            <h3>System Status</h3>
+            <ul>
+                <li>Twilio API: <span class="status online">Online</span></li>
+                <li>Database: <span class="status online">Online</span></li>
+                <li>Storage Service: <span class="status offline">Offline</span></li>
+            </ul>
+        </div>
+
+        <div class="widget wide">
+            <h3>Pending Actions</h3>
+            <ul>
+                <li>3 New Tutor Applications</li>
+                <li>2 Flagged Forum Posts</li>
+            </ul>
+        </div>
+    </div>
+</div>

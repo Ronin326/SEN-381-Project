@@ -1,22 +1,209 @@
 html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
     font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    scroll-behavior: smooth;
 }
 
 body {
-  margin-bottom: 60px;
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-image: url('/images/BGImage.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #e5e5e5;
+}
+
+main, .page-content, .container, .content-wrapper {
+    margin-top: 80px; /* adjust to match your header height */
+}
+
+/* --- NAVBAR --- */
+#mainNav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid rgba(0, 175, 214, 0.3);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    /* ? Fixes */
+    position: fixed; /* makes nav stay above content */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+/* Logo */
+#logo {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #00afd6;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+    #logo:hover {
+        color: #ff2b96;
+    }
+
+/* Nav links */
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+    .nav-links a {
+        color: #d7d7d7;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+        .nav-links a:hover {
+            color: #00afd6;
+        }
+
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background-color: #00afd6;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+/* Right-side icons */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.icon {
+    cursor: pointer;
+    font-size: 1.3rem;
+    color: #d7d7d7;
+    transition: color 0.3s ease, transform 0.2s;
+}
+
+    .icon:hover {
+        color: #ff2b96;
+        transform: scale(1.1);
+    }
+
+/* Burger menu */
+.burger {
+    display: none;
+    z-index: 1001;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+    .burger div {
+        width: 25px;
+        height: 3px;
+        z-index: 1001;
+        background-color: #d7d7d7;
+        border-radius: 2px;
+        transition: 0.3s ease;
+    }
+
+    .burger.active div:nth-child(1) {
+        z-index: 1001;
+        transform: rotate(45deg) translateY(8px);
+    }
+
+    .burger.active div:nth-child(2) {
+        z-index: 1001;
+        opacity: 0;
+    }
+
+    .burger.active div:nth-child(3) {
+        z-index: 1001;
+        transform: rotate(-45deg) translateY(-8px);
+    }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        flex-direction: column;
+        background-color: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(8px);
+        text-align: center;
+        padding: 1rem 0;
+    }
+
+        .nav-links.active {
+            display: flex;
+        }
+
+    .burger {
+        z-index: 1001;
+        display: flex;
+    }
+}
+
+/* === Profile Dropdown Styling === */
+.profile-container {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-icon {
+    cursor: pointer;
+    font-size: 1.4rem;
+    user-select: none;
+}
+
+.profile-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #222;
+    min-width: 140px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    z-index: 999;
+    padding: 6px 0;
+}
+
+    .profile-dropdown a {
+        display: block;
+        color: #fff;
+        padding: 10px 16px;
+        text-decoration: none;
+        transition: background 0.2s;
+    }
+
+        .profile-dropdown a:hover {
+            background-color: #444;
+        }
+
+.profile-container.active .profile-dropdown {
+    display: block;
 }

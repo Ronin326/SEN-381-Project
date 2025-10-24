@@ -1,0 +1,139 @@
+﻿/* === ADMIN ANALYTICS PAGE === */
+body {
+    background-image: url('/images/BGImage.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    margin: 0;
+    color: #e5e5e5;
+    font-family: "Segoe UI", sans-serif;
+}
+
+/* === Page Container === */
+.admin-container {
+    padding: 2.5rem;
+    max-width: 1300px;
+    margin: 0 auto;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* === Page Title === */
+.page-title {
+    color: #00afd6;
+    text-shadow: 0 0 12px rgba(0, 175, 214, 0.6);
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin-bottom: 2.5rem;
+    text-align: center;
+}
+
+/* === Dashboard Grid === */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 2rem;
+}
+
+/* === Widgets === */
+.widget {
+    background: rgba(0, 0, 0, 0.55);
+    border-radius: 1rem;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 175, 214, 0.25);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+    .widget:hover {
+        transform: translateY(-5px);
+        border-color: rgba(229, 2, 126, 0.4);
+        box-shadow: 0 0 25px rgba(229, 2, 126, 0.25);
+    }
+
+    /* === Widget Titles === */
+    .widget h3 {
+        color: #00afd6;
+        font-size: 1.3rem;
+        margin-bottom: 1.2rem;
+        text-shadow: 0 0 8px rgba(0, 175, 214, 0.4);
+    }
+
+/* === Chart Placeholders === */
+.chart-placeholder {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px dashed rgba(0, 175, 214, 0.4);
+    border-radius: 12px;
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(229, 229, 229, 0.7);
+    font-style: italic;
+    transition: 0.3s ease;
+}
+
+
+    .chart-placeholder:hover {
+        border-color: rgba(229, 2, 126, 0.6);
+        color: #fff;
+        text-shadow: 0 0 10px rgba(229, 2, 126, 0.4);
+    }
+
+    .chart-placeholder img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* or 'cover' depending on your goal */
+    }
+
+/* === List Section (Content Popularity) === */
+.widget ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+    .widget ul li {
+        margin: 0.7rem 0;
+        padding: 0.5rem 0.7rem;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 6px;
+        border-left: 3px solid rgba(0, 175, 214, 0.5);
+        transition: all 0.3s ease;
+    }
+
+        .widget ul li:hover {
+            border-left-color: #e5027e;
+            background: rgba(229, 2, 126, 0.07);
+        }
+
+    .widget ul strong {
+        color: #00afd6;
+        text-shadow: 0 0 6px rgba(0, 175, 214, 0.3);
+    }
+
+/* === Responsive Layout === */
+@media (max-width: 768px) {
+    .admin-container {
+        padding: 1.5rem;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+/* === Animation === */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

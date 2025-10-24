@@ -1,0 +1,20 @@
+@page
+@{
+    Layout = null;   // temporary so the page renders
+}
+@model ForumCreateModel
+
+
+<h2>Create a New Post</h2>
+
+<form method="post">
+    <div>
+        <label>Title</label>
+        <input asp-for="Post.Title" class="form-control" />
+    </div>
+    <div>
+        <label>Content</label>
+        <textarea asp-for="Post.Content" class="form-control"></textarea>
+    </div>
+    <button type="submit">Submit</button>
+</form>

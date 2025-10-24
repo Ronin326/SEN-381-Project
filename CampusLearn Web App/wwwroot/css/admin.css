@@ -1,0 +1,173 @@
+﻿body {
+    background-image: url('/images/BGImage.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    margin: 0;
+    color: #e5e5e5;
+}
+/* --- Dashboard / Panel Layout --- */
+.admin-container {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    gap: 2rem;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* --- Section Cards --- */
+.admin-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    box-shadow: 0 0 20px rgba(0, 175, 214, 0.2);
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+    .admin-card:hover {
+        box-shadow: 0 0 25px rgba(255, 43, 150, 0.35);
+        transform: translateY(-4px);
+    }
+
+    /* --- Headings --- */
+    .admin-card h2,
+    .admin-card h3 {
+        color: #00afd6;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 43, 150, 0.2);
+        padding-bottom: 0.5rem;
+    }
+
+/* --- Tables --- */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+    .admin-table th,
+    .admin-table td {
+        padding: 0.9rem 1.2rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .admin-table th {
+        background: rgba(0, 175, 214, 0.15);
+        color: #00afd6;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+    }
+
+    .admin-table tr:hover {
+        background: rgba(255, 43, 150, 0.08);
+    }
+
+/* --- Buttons --- */
+.btn-admin {
+    background: linear-gradient(90deg, #00afd6, #e5027e);
+    border: none;
+    color: #fff;
+    padding: 0.6rem 1.2rem;
+    border-radius: 30px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    .btn-admin:hover {
+        background: linear-gradient(90deg, #e5027e, #00afd6);
+        box-shadow: 0 0 10px rgba(255, 43, 150, 0.5);
+        transform: scale(1.05);
+    }
+
+/* --- Search & Filter Bar --- */
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+    .search-bar input {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(0, 175, 214, 0.3);
+        border-radius: 20px;
+        color: #fff;
+        padding: 0.5rem 1rem;
+        width: 250px;
+        transition: 0.3s;
+    }
+
+        .search-bar input:focus {
+            border-color: #ff2b96;
+            outline: none;
+            box-shadow: 0 0 10px rgba(255, 43, 150, 0.3);
+        }
+
+/* --- Analytics Charts Placeholder --- */
+.chart-container {
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 14px;
+    padding: 1rem;
+    height: 300px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* --- Pending Actions List --- */
+.pending-list {
+    list-style: none;
+    padding: 0;
+}
+
+    .pending-list li {
+        background: rgba(255, 255, 255, 0.03);
+        border-left: 4px solid #00afd6;
+        padding: 0.8rem 1rem;
+        margin-bottom: 0.5rem;
+        border-radius: 8px;
+        transition: 0.3s;
+    }
+
+        .pending-list li:hover {
+            border-left-color: #ff2b96;
+            background: rgba(255, 43, 150, 0.1);
+        }
+
+/* --- Status Badges --- */
+.status {
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+    .status.active {
+        background: rgba(0, 255, 150, 0.15);
+        color: #00ff96;
+    }
+
+    .status.suspended {
+        background: rgba(255, 43, 150, 0.15);
+        color: #ff2b96;
+    }
+
+    .status.pending {
+        background: rgba(255, 200, 0, 0.15);
+        color: #ffc800;
+    }
+
+/* --- Animations --- */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

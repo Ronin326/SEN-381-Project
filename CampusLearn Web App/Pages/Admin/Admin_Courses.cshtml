@@ -1,0 +1,50 @@
+﻿@page
+@model CampusLearn_Web_App.Pages.Admin.Admin_CoursesModel
+@{
+    ViewData["Title"] = "Courses Managment";
+    Layout = "_AdminLayout";
+}
+
+<link rel="stylesheet" href="~/css/management.css" asp-append-version="true" />
+
+<div class="admin-container">
+    <h1 class="page-title">Course Management</h1>
+
+    <div class="action-bar">
+        <button class="btn-primary">Add Course</button>
+    </div>
+
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>ModuleID</th>
+                <th>ModuleName</th>
+                <th>ModuleCode</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Modules != null && Model.Modules.Any())
+            {
+                foreach (var module in Model.Modules)
+                {
+                    <tr>
+                        <td>@module.ModuleID</td>
+                        <td>@($"{module.ModuleName}")</td>
+                        <td>@module.ModuleCode</td>
+                        <td>
+                            <button class="btn-small">Edit</button>
+                            <button class="btn-small warn">Delete</button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" class="no-results">No courses found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

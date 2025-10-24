@@ -1,0 +1,64 @@
+﻿@page
+@model CampusLearn_Web_App.Pages.Admin.Admin_UsersModel
+@{
+    ViewData["Title"] = "User Management";
+    Layout = "_AdminLayout";
+}
+
+<link rel="stylesheet" href="~/css/management.css" asp-append-version="true" />
+
+<div class="admin-container">
+    <h1 class="page-title">User Management</h1>
+
+    <form method="get" class="search-bar" id="searchForm">
+        <input type="text" name="searchTerm" id="searchInput" placeholder="Search users..."/>
+        <button type="submit">Search</button>
+    </form>
+
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Users != null && Model.Users.Any())
+            {
+                foreach (var user in Model.Users)
+                {
+                    <tr>
+                        <td>@user.UserID</td>
+                        <td>@($"{user.FirstName} {user.LastName}")</td>
+                        <td>@user.Email</td>
+                        <td>@user.Role</td>
+                        <td>
+                            <button class="btn-small">View</button>
+                            <button class="btn-small warn">Suspend</button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="no-results">No users found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Clear search bar after submitting the form
+    const form = document.getElementById("searchForm");
+    form.addEventListener("submit", () => {
+        setTimeout(() => {
+            document.getElementById("searchInput").value = "";
+            document.getElementById("searchInput").textContent = "";
+        }, 100);
+    });
+</script>

@@ -151,7 +151,14 @@ namespace CampusLearn_Web_App.Controllers
 
             _logger.LogInformation("👋 Logout successful for: {UserName} ({Email})", userName, userEmail);
 
-            return Ok(new { success = true, message = "Logout successful" });
+            // Check if it's an AJAX request
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return Ok(new { success = true, redirectTo = "/LoginPage" });
+            }
+
+            // For regular form submit, redirect to login
+            return LocalRedirect("/LoginPage");
         }
 
         [HttpGet("user-count")]
